@@ -14,8 +14,9 @@ such as victim headcount and geographic coordinates, and categorical data, inclu
 road conditions, weather, severity, and other details of accidents. 
 Some data like speed limit can be treated as either numerical or categorical, depending on the purpose of the data analysis.
 
-By running the program, the user can select a function by entering the number shown in the menu. 
-The program can generating reports, creating graphical reports (not implemented yet), and exiting.
+By running the program, the user can select a function by entering the number 0,1 or 2 shown in the menu.
+After the user inputs the option number, the program will validate the input. 
+If the input is out of the pre-set range, the program will remind the user that it is an invalid input and prompt them to try again.The program can generating reports, creating graphical reports (not implemented yet), and exiting.
 
 The functions are:
 Option 0: If the user input 0, they need to follow the menu prompts to enter year and speed limit. 
