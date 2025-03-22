@@ -3,6 +3,9 @@ import pandas as pd
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
 
+#glboal variable
+crash_year = tuple(range(2000,2025))
+speed_limit = tuple(range(0,110+1,10))
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -15,6 +18,35 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     desired_columns = df[columns]
     return list(desired_columns.itertuples(index=False, name=None))
 
+#validate the year input
+def read_year():
+    """validate the year within the range of year tuple"""
+    year = input("Year: ")
+    if year.isdigit():
+        while int(year) not in crash_year:
+            print ("Year must be between 2000 and 2024")
+            return read_year()
+    else:
+        print ("Year must be a integer")
+        return read_year()
+    return year
+
+#validate the speed limit input
+## next phase: can combine with read_year() function
+## problem: not output of accident report???
+def read_speed_limit():
+    """validate the speed limit within the range of speed tuple"""
+    speed = input("Speed Limit: ")
+    if speed == "": #default value
+        speed = speed_limit
+    elif speed.isdigit():
+        while int(speed) not in speed_limit:
+            print("Speed limit must be between 0 and 110 step by 10")
+            return read_speed_limit()
+    else:
+        print ("Speed limit must be a integer")
+        return read_speed_limit()
+    return speed
 
 def menu_select(options: list[str]) -> int:
     """
@@ -22,7 +54,7 @@ def menu_select(options: list[str]) -> int:
     - The user is prompted until they enter a valid menu index
     - returns valid user selection
     """
-    prompt = f"0-{len(options) - 1}:: "
+    prompt = f"0-{len(options) - 1}: "
     i = 0
     while i < len(options):
         print(f'[{i}] {options[i]}')
@@ -63,6 +95,9 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     data = read_csv_data(
         DATA_FILE, ["crashYear", "speedLimit", "crashSeverity"])
     severity_types = unique_values(data, 2)
+    # read all valid crash years
+    crash_years = []
+
     print("Crash Severity by Classification")
     print(f"Speed: {speed_of_interest}")
     print(f"Year: {year_of_interest}")
@@ -84,9 +119,8 @@ def main():
     ]
     option = menu_select(menu_options)
     if option == 0:
-        year = int(input("Year: "))
-        speed_limit = int(input("Seed Limit: "))
-
+        year = read_year()
+        speed_limit = read_speed_limit()
         print_crash_severity_report(year, speed_limit)
     elif option == 1:
         print("Not Implemented Yet")
