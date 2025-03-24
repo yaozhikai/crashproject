@@ -20,7 +20,7 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
 
 #validate the year input
 def read_year():
-    """validate the year within the range of year tuple"""
+    """verify if input is integer, and if it is in the range of year tuple"""
     year = input("Year: ")
     if year.isdigit():
         while int(year) not in crash_year:
@@ -35,10 +35,10 @@ def read_year():
 ## next phase: can combine with read_year() function
 ## problem: not output of accident report???
 def read_speed_limit():
-    """validate the speed limit within the range of speed tuple"""
+    """verify if input is integer, and if it is in the range of speed tuple"""
     speed = input("Speed Limit: ")
-    if speed == "": #default value
-        speed = speed_limit
+    if speed == "":  # default value
+        return list(speed_limit)
     elif speed.isdigit():
         while int(speed) not in speed_limit:
             print("Speed limit must be between 0 and 110 step by 10")
@@ -95,9 +95,6 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     data = read_csv_data(
         DATA_FILE, ["crashYear", "speedLimit", "crashSeverity"])
     severity_types = unique_values(data, 2)
-    # read all valid crash years
-    crash_years = []
-
     print("Crash Severity by Classification")
     print(f"Speed: {speed_of_interest}")
     print(f"Year: {year_of_interest}")
