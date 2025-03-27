@@ -34,11 +34,14 @@ If a temporary speed limit is added, it does not overwrite the original data, pr
 If a temporary speed limit is unavailable, the program automatically defaults to the standard speed limit, ensuring there is always a valid value to use.
 
 ## 3. Warn the user if no records are found  
-Replace me with an outline of:
-If the report returns 0 with valid year and speed limit, print a warning that no records are found.
+If the accident count for all severity categories is 0 given a valid year and speed limit, the program will now print a warning message that no records were found.
+### Use accumulator and If loop
+To implement this feature, I used an accumulator (total_count) to track the total number of accidents among all severity categories. At the same time, I created a results list to temporarily store each severity category and its count number.
 
-- how you implemented this feature
-- choices you made and why
+If print the result witin the main body for loop, the function will iterates over each severity type. Therefore, I moved the output logic outside the for loop to ensure that the total count is only processed after all data has been finished. This method helped avioding repeated output during my earlier attempts.
+The revised function allowed me to use a single if condition after the loop to check whether total_count is 0. If yes, the program prints a warning message. Otherwise, it iterates through the results list and prints each severity category and its count.
+### Reason of this approach
+Accumulator is suitable for counting the amounts when given condition is true. Meanwhile, I think this method requires only a few modification of existing function, which minimize the complexity and chance of error.
 
 ## 4. Add all years: Crash Severity Report
 Replace me with an outline of:

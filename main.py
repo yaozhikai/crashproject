@@ -129,14 +129,23 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     print(f"Speed: {speed_of_interest}")
     print(f"Year: {year_of_interest}")
     print()
+    results = [] #accumulate total and store results in a list of tuple (type, count)
+    total_count = 0 #use this to accumulate all kinds of acc
     for severity_type in severity_types:
         count = 0
         for year, speed_limit, crash_type in data:
             if year == year_of_interest and speed_limit == speed_of_interest and crash_type == severity_type:
                 count += 1
-        print(f"{severity_type}: {count}")
-
-
+        results.append((severity_type, count))
+        total_count += count
+        
+    if total_count == 0:
+        print ('Warning: No records found in this category of year and speed limit.')
+    else:
+        for severity_type, count in results:
+            print(f"{severity_type}: {count}")
+    
+            
 def main():
     """Small application that presents tables and graphs based on crash data"""
     menu_options = [
@@ -148,10 +157,10 @@ def main():
     if option == 0:
         """this is to read user input year"""
         #year_of_interest=read_valid_int ('Please Enter Crash Year.', crash_year, 'Year')
-        year_of_interest    = int(read_year())
+        year_of_interest    = read_year()
         """this is to read user input speed limit"""
         #speed_of_interest=read_valid_int ('Please Enter Speed Limit', speed_limit, value='Speed Limit')
-        speed_of_interest = int(read_speed_limit())
+        speed_of_interest = read_speed_limit()
         """this calls the print function"""
         print_crash_severity_report (year_of_interest, speed_of_interest)
     elif option == 1:
