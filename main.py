@@ -5,7 +5,10 @@ CONDITION = "fine"
 
 #glboal variable
 crash_year = tuple(range(2000,2025))
-speed_limit = tuple(range(0,110+1,10))
+speed_limit = tuple(range(10,110+1,10))
+
+
+
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -18,11 +21,36 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     desired_columns = df[columns]
     return list(desired_columns.itertuples(index=False, name=None))
 
+# verify if input is int, and if it is in the tuple
+def read_valid_int (prompt, valid_data, value='value'):
+    """This is a generic function to read user input of integer value"""
+    print(f"{prompt}")
+    print(f"Valid range: {min(valid_data)} to {max(valid_data)}")
+    print(f"Or press Enter to select all {value.lower()}s.")
+    user_value = input(f'{value}: ')
+    if user_value == "": #default value, select all
+        return list(valid_data)
+    elif user_value.isdigit():
+        if int(user_value) in valid_data:
+            return user_value
+        else:
+            print (f'{value} must be between {min(valid_data)} and {max(valid_data)}') 
+            return read_valid_int ()
+    else:
+        print ('Input must be an integer.')
+        return read_valid_int ()
+    pass
+
+
 #validate the year input
 def read_year():
     """verify if input is integer, and if it is in the range of year tuple"""
+    print (f'Please input an integer between {min(crash_year)} and {max(crash_year)}')
+    print (f'Or please left empty if a full summary of year is prefered')
     year = input("Year: ")
-    if year.isdigit():
+    if year == "":  # default value
+        return list(crash_year)
+    elif year.isdigit():
         while int(year) not in crash_year:
             print ("Year must be between 2000 and 2024")
             return read_year()
@@ -36,6 +64,8 @@ def read_year():
 ## problem: not output of accident report???
 def read_speed_limit():
     """verify if input is integer, and if it is in the range of speed tuple"""
+    print (f'Please input an integer between {min(speed_limit)} and {max(speed_limit)}')
+    print (f'Or please left empty if a full summary of speed limit is prefered')
     speed = input("Speed Limit: ")
     if speed == "":  # default value
         return list(speed_limit)
@@ -116,9 +146,14 @@ def main():
     ]
     option = menu_select(menu_options)
     if option == 0:
-        year = read_year()
-        speed_limit = read_speed_limit()
-        print_crash_severity_report(year, speed_limit)
+        """this is to read user input year"""
+        #year_of_interest=read_valid_int ('Please Enter Crash Year.', crash_year, 'Year')
+        year_of_interest    = int(read_year())
+        """this is to read user input speed limit"""
+        #speed_of_interest=read_valid_int ('Please Enter Speed Limit', speed_limit, value='Speed Limit')
+        speed_of_interest = int(read_speed_limit())
+        """this calls the print function"""
+        print_crash_severity_report (year_of_interest, speed_of_interest)
     elif option == 1:
         print("Not Implemented Yet")
     elif option == 2:

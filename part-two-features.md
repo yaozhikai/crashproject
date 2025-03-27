@@ -35,6 +35,7 @@ If a temporary speed limit is unavailable, the program automatically defaults to
 
 ## 3. Warn the user if no records are found  
 Replace me with an outline of:
+If the report returns 0 with valid year and speed limit, print a warning that no records are found.
 
 - how you implemented this feature
 - choices you made and why
