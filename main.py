@@ -22,24 +22,30 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     return list(desired_columns.itertuples(index=False, name=None))
 
 # verify if input is int, and if it is in the tuple
+# cannot return all data if empty now.
 def read_valid_int (prompt, valid_data, value='value'):
-    """This is a generic function to read user input of integer value"""
-    print(f"{prompt}")
-    print(f"Valid range: {min(valid_data)} to {max(valid_data)}")
+    """This is a generic function to read user input of integer value
+    - If user press enter, return a list of all valid value for full summary
+    - If user input a valid integer within tuple, return the integer
+    - If input is invalid, prompt again."""
+    print(prompt)
+    print(f"{value} Valid range: {min(valid_data)} to {max(valid_data)}")
     print(f"Or press Enter to select all {value.lower()}s.")
+
     user_value = input(f'{value}: ')
+
     if user_value == "": #default value, select all
         return list(valid_data)
     elif user_value.isdigit():
-        if int(user_value) in valid_data:
-            return user_value
+        user_int = int(user_value)
+        if user_int in valid_data:
+            return user_int
         else:
             print (f'{value} must be between {min(valid_data)} and {max(valid_data)}') 
-            return read_valid_int ()
+            return read_valid_int(prompt, valid_data, value)   
     else:
         print ('Input must be an integer.')
-        return read_valid_int ()
-    pass
+        return read_valid_int(prompt, valid_data, value)
 
 
 #validate the year input
@@ -51,17 +57,20 @@ def read_year():
     if year == "":  # default value
         return list(crash_year)
     elif year.isdigit():
-        while int(year) not in crash_year:
+        year = int(year)
+        if year in crash_year:
+            return year
+        else:
             print ("Year must be between 2000 and 2024")
             return read_year()
     else:
         print ("Year must be a integer")
         return read_year()
-    return year
+    pass
 
 #validate the speed limit input
-## next phase: can combine with read_year() function
-## problem: not output of accident report???
+## next phase: can combine with read_year() function--- solved
+## problem: not output of accident report--- solved
 def read_speed_limit():
     """verify if input is integer, and if it is in the range of speed tuple"""
     print (f'Please input an integer between {min(speed_limit)} and {max(speed_limit)}')
@@ -70,13 +79,16 @@ def read_speed_limit():
     if speed == "":  # default value
         return list(speed_limit)
     elif speed.isdigit():
-        while int(speed) not in speed_limit:
+        speed = int(speed)
+        if speed in speed_limit:
+            return speed
+        else:    
             print("Speed limit must be between 0 and 110 step by 10")
             return read_speed_limit()
     else:
         print ("Speed limit must be a integer")
         return read_speed_limit()
-    return speed
+    pass
 
 def menu_select(options: list[str]) -> int:
     """
@@ -156,11 +168,11 @@ def main():
     option = menu_select(menu_options)
     if option == 0:
         """this is to read user input year"""
-        #year_of_interest=read_valid_int ('Please Enter Crash Year.', crash_year, 'Year')
-        year_of_interest    = read_year()
+        year_of_interest = read_valid_int("Please enter crash year.", crash_year, "Year")
+        #year_of_interest    = read_year()
         """this is to read user input speed limit"""
-        #speed_of_interest=read_valid_int ('Please Enter Speed Limit', speed_limit, value='Speed Limit')
-        speed_of_interest = read_speed_limit()
+        speed_of_interest = read_valid_int("Please enter speed limit.", speed_limit, "Speed Limit")
+        #speed_of_interest = read_speed_limit()
         """this calls the print function"""
         print_crash_severity_report (year_of_interest, speed_of_interest)
     elif option == 1:
