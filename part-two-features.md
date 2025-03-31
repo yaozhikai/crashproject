@@ -4,6 +4,9 @@ Below are a list of features that are to be completed for the second part of the
 Please fill in the section for each feature, replace all text below each heading.
 
 ## 1. Validate user input: Crash Severity Report
+### Assumptions of valid speed limit
+For the purpose of further analysing the relationship between 'speed limit' and 'crash severity', only records with speed limits that are valid multiples of 10 between 10 and 110 km/h were retained.
+Based on my observation of data, speed values such as 2, 5, 6, 15, 51, and 61 occurred extremely rarely and are likely due to data entry errors or irregular reporting. Meanwhile, records with missing speed limit values (0.12% of total data) were also limited in amount. Therefore, I assume these records are noise and should be exclude from the program, as speed limit is a critical independent variable for the analysis and the proportion of such abnormal data is negligible.
 
 ### Setting valid years and speed limits
 I plan to store valid years and speed limits as tuples.

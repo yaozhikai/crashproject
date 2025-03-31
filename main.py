@@ -33,20 +33,21 @@ def read_valid_int (prompt, valid_data, value='value'):
     print(f"Or press Enter to select all {value.lower()}s.")
 
     user_value = input(f'{value}: ')
+    result = []
 
-    if user_value == "": #default value, select all
+    if len(user_value) == 0: #default value, select all
         return list(valid_data)
     elif user_value.isdigit():
         user_int = int(user_value)
         if user_int in valid_data:
-            return user_int
+            result.append(user_int)
+            return result
         else:
             print (f'{value} must be between {min(valid_data)} and {max(valid_data)}') 
             return read_valid_int(prompt, valid_data, value)   
     else:
         print ('Input must be an integer.')
         return read_valid_int(prompt, valid_data, value)
-
 
 #validate the year input
 def read_year():
@@ -146,7 +147,7 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     for severity_type in severity_types:
         count = 0
         for year, speed_limit, crash_type in data:
-            if year == year_of_interest and speed_limit == speed_of_interest and crash_type == severity_type:
+            if (year in year_of_interest) and (speed_limit in speed_of_interest) and crash_type == severity_type:
                 count += 1
         results.append((severity_type, count))
         total_count += count
@@ -171,7 +172,7 @@ def main():
         year_of_interest = read_valid_int("Please enter crash year.", crash_year, "Year")
         #year_of_interest    = read_year()
         """this is to read user input speed limit"""
-        speed_of_interest = read_valid_int("Please enter speed limit.", speed_limit, "Speed Limit")
+        speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limit, "Speed Limit")
         #speed_of_interest = read_speed_limit()
         """this calls the print function"""
         print_crash_severity_report (year_of_interest, speed_of_interest)
