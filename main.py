@@ -1,3 +1,15 @@
+"""
+Traffic Accident Analysis Tool
+
+This program provides an interactive menu to generate text and visual reports 
+for traffic accident statistics (by severity level, year, and speed limit) 
+based on historical data from 2000 to 2025.
+
+Features:
+- Generate text reports summarizing accident counts by severity
+- Plot graphical trends of accidents by year and speed limit
+"""
+
 import pandas as pd
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
@@ -136,7 +148,7 @@ def unique_values(table: list, col_index: int) -> list:
 def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -> None:
     """Prints a table outlining the number of crashes in a given year for a given speed limit"""
     data = read_csv_data(
-        DATA_FILE, ["crashYear", "speedLimit", "crashSeverity"])
+        DATA_FILE, ["crashYear", "speedLimit", "crashSeverity" ,"temporarySpeedLimit"])
     severity_types = unique_values(data, 2)
     print("Crash Severity by Classification")
     print(f"Speed: {speed_of_interest}")
@@ -144,10 +156,25 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     print()
     results = [] #accumulate total and store results in a list of tuple (type, count)
     total_count = 0 #use this to accumulate all kinds of acc
+    
     for severity_type in severity_types:
         count = 0
-        for year, speed_limit, crash_type in data:
-            if (year in year_of_interest) and (speed_limit in speed_of_interest) and crash_type == severity_type:
+
+        for year, speed_limit, crash_type, temporary_speed in data:
+            
+            # Check if there's a temporary speed limit.
+            # In Python, float('nan') != float('nan'), use this to detect NaN (missing values).
+            # If temporary_speed is valid (not NaN), use it. Otherwise, fall back to speed_limit.
+            # If both are NaN, skip the record based on my assumption.
+
+            if temporary_speed == temporary_speed : #solution- nan cannot equal to nan, to ignore null cells
+                effective_speed = int(temporary_speed)
+            elif speed_limit == speed_limit:
+                effective_speed = int(speed_limit)
+            else:
+                continue
+
+            if (year in year_of_interest) and (effective_speed in speed_of_interest) and crash_type == severity_type:
                 count += 1
         results.append((severity_type, count))
         total_count += count
