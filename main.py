@@ -6,8 +6,9 @@ for traffic accident statistics (by severity level, year, and speed limit)
 based on historical data from 2000 to 2025.
 
 Features:
-- Generate text reports summarizing accident counts by severity
-- Plot graphical trends of accidents by year and speed limit
+- Based on user input year and speed limit,
+  generate text reports summarizing accident counts by severity.
+- Plot graphical report of accident amounts by year.
 """
 
 import pandas as pd
@@ -187,23 +188,32 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
         for severity_type, count in results:
             print(f"{severity_type}: {count}")
 
-def plot_crash_over_time(): ###developing
+def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
     data = read_csv_data(DATA_FILE, ["crashYear"]) #read crashyear column
-    crash_each_year = [] #use accumulator to count by year
+
+    ys = get_crash_each_year(data) #give crash each year to Y axes
+
+    xs = crash_years
+
+    axes = plt.axes()
+    axes.bar(xs, ys)
+    axes.grid(True)
+    axes.set_xlabel("Year")
+    axes.set_ylabel("Amount of Accidents")
+    axes.set_title("Crash Over Time Graph", size = 15)
+    plt.show()
+
+def get_crash_each_year(data):
+    """decomposition function to accumulate yearly crash data"""
+    crash_each_year = []
     for crash_year in crash_years:
         count = 0
         for year in data:
             if year[0] == crash_year:
                 count +=1
         crash_each_year.append(count)
-
-    xs = np.arange(len(crash_years))
-    ys = crash_each_year
-    axes = plt.axes()
-    axes.bar(xs, ys)
-    plt.show()
-
+    return crash_each_year
             
 def main():
     """Small application that presents tables and graphs based on crash data"""
