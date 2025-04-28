@@ -19,11 +19,17 @@ DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
 
 #glboal variable
-crash_years = tuple(range(2000,2025))
+
+def get_valid_values(filename, columns, target_col_index):
+    """a generic function to read valid unique values in dataset,
+    use this dynamic function to replace pre-defined year and speed tuples
+    """
+    data = read_csv_data(filename, columns) #read column in dataset
+    valid_values = unique_values(data, target_col_index) #get unique value from the column
+    return tuple(valid_values)
+
+###crash_years = tuple(range(2000,2025))
 speed_limits = tuple(range(10,110+1,10))
-
-
-
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -217,6 +223,10 @@ def get_crash_each_year(data):
             
 def main():
     """Small application that presents tables and graphs based on crash data"""
+
+    global crash_years ### set crash year as global in the program
+    crash_years = get_valid_values(DATA_FILE, ["crashYear"], 0)
+
     menu_options = [
         "Crash Severity Report",
         "Crash Reports Over Time Graph",
@@ -237,5 +247,4 @@ def main():
     elif option == 2:
         print("Bye")
 
-
-main()
+main ()
