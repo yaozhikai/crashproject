@@ -18,8 +18,6 @@ import matplotlib.pyplot as plt
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
 
-#glboal variable
-
 def get_valid_values(filename, columns, target_col_index):
     """a generic function to read valid unique values in dataset,
     use this dynamic function to replace pre-defined year and speed tuples
@@ -40,10 +38,6 @@ def filter_valid_speed(DATA_FILE):
             valid_speeds.append(int(value))
     valid_speeds.sort()
     return tuple(valid_speeds)
-
-
-###crash_years = tuple(range(2000,2025))
-###speed_limits = tuple(range(10,110+1,10))
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -81,48 +75,6 @@ def read_valid_int (prompt, valid_data, value='value'):
     else:
         print ('Input must be an integer.')
         return read_valid_int(prompt, valid_data, value)
-
-#validate the year input
-def read_year():
-    """verify if input is integer, and if it is in the range of year tuple"""
-    print (f'Please input an integer between {min(crash_years)} and {max(crash_years)}')
-    print (f'Or please left empty if a full summary of year is prefered')
-    year = input("Year: ")
-    if year == "":  # default value
-        return list(crash_years)
-    elif year.isdigit():
-        year = int(year)
-        if year in crash_years:
-            return year
-        else:
-            print ("Year must be between 2000 and 2024")
-            return read_year()
-    else:
-        print ("Year must be a integer")
-        return read_year()
-    pass
-
-#validate the speed limit input
-## next phase: can combine with read_year() function--- solved
-## problem: not output of accident report--- solved
-def read_speed_limits():
-    """verify if input is integer, and if it is in the range of speed tuple"""
-    print (f'Please input an integer between {min(speed_limits)} and {max(speed_limits)}')
-    print (f'Or please left empty if a full summary of speed limit is prefered')
-    speed = input("Speed Limit: ")
-    if speed == "":  # default value
-        return list(speed_limits)
-    elif speed.isdigit():
-        speed = int(speed)
-        if speed in speed_limits:
-            return speed
-        else:    
-            print("Speed limit must be between 0 and 110 step by 10")
-            return read_speed_limits()
-    else:
-        print ("Speed limit must be a integer")
-        return read_speed_limits()
-    pass
 
 def menu_select(options: list[str]) -> int:
     """
