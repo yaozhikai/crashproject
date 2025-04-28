@@ -143,28 +143,18 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     for severity_type in severity_types:
         # for loop to go through each severity_type
         count = 0
-
         for year, speed_limit, crash_type, temporary_speed in data:
-            
-            # Check if there's a temporary speed limit.
-            # In Python, float('nan') != float('nan'), use this to detect NaN (missing values).
-            # If temporary_speed is valid (not NaN), use it. Otherwise, use normal speed_limit.
-            # If both are NaN, skip the record based on my assumption.
+            effective_speed = get_effective_speed(speed_limit, temporary_speed)
+            if effective_speed is None:
+                continue  # skip invalid data
 
-            if temporary_speed == temporary_speed : #solution- nan cannot equal to nan, to ignore null cells
-                effective_speed = int(temporary_speed)
-            elif speed_limit == speed_limit: #ignore cells without normal speed_limit.
-                effective_speed = int(speed_limit)
-            else:
-                continue
-
-            if (year in year_of_interest) and (effective_speed in speed_of_interest) and crash_type == severity_type:
-                ### if the values are in the list of input year and speed
+            if (year == year_of_interest) and (effective_speed == speed_of_interest) and (crash_type == severity_type):
                 count += 1
+
         results.append((severity_type, count))
         total_count += count
         
-    if total_count == 0:
+    if total_count == 0: #example: year 2013/ speed 110
         print ('Warning: No records found in this category of year and speed limit.')
     else:
         for severity_type, count in results:
