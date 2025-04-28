@@ -31,13 +31,23 @@ def filter_valid_speed(DATA_FILE):
     """assume valid speed limits are multiples of 10,
     filter unique speed values to return a tuple of leagal speed"""
     raw_speed_limits = get_valid_values(DATA_FILE, ["speedLimit"], 0) #get speed from csv file
-    
     valid_speeds = []
     for value in raw_speed_limits:
         if value % 10 == 0: #filter legal values- assume it's multiple of 10
             valid_speeds.append(int(value))
     valid_speeds.sort()
     return tuple(valid_speeds)
+
+def get_effective_speed(speed_limit, temporary_speed):
+    """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
+    # check if temporary speed exists and is valid as multiples of 10
+    if temporary_speed == temporary_speed and temporary_speed % 10 == 0:
+        return int(temporary_speed)
+    # check if normal speed limit exists and is valid
+    elif speed_limit == speed_limit and speed_limit % 10 == 0:
+        return int(speed_limit)
+    else:
+        return None  # Both are missing or invalid
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
