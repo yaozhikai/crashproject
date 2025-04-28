@@ -26,10 +26,24 @@ def get_valid_values(filename, columns, target_col_index):
     """
     data = read_csv_data(filename, columns) #read column in dataset
     valid_values = unique_values(data, target_col_index) #get unique value from the column
+    valid_values.sort()
     return tuple(valid_values)
 
+def filter_valid_speed(DATA_FILE):
+    """assume valid speed limits are multiples of 10,
+    filter unique speed values to return a tuple of leagal speed"""
+    raw_speed_limits = get_valid_values(DATA_FILE, ["speedLimit"], 0) #get speed from csv file
+    
+    valid_speeds = []
+    for value in raw_speed_limits:
+        if value % 10 == 0: #filter legal values- assume it's multiple of 10
+            valid_speeds.append(int(value))
+    valid_speeds.sort()
+    return tuple(valid_speeds)
+
+
 ###crash_years = tuple(range(2000,2025))
-speed_limits = tuple(range(10,110+1,10))
+###speed_limits = tuple(range(10,110+1,10))
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -224,8 +238,9 @@ def get_crash_each_year(data):
 def main():
     """Small application that presents tables and graphs based on crash data"""
 
-    global crash_years ### set crash year as global in the program
+    global crash_years, speed_limits ### set crash year as global in the program
     crash_years = get_valid_values(DATA_FILE, ["crashYear"], 0)
+    speed_limits = filter_valid_speed(DATA_FILE)
 
     menu_options = [
         "Crash Severity Report",
