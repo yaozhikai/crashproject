@@ -27,12 +27,10 @@ def prepare_clean_data(raw_data):
     Only records with valid effective speed are included
     """
     clean_data = []
-
     for crash_year, speed_limit, crash_severity, temporary_speed in raw_data:
         effective_speed = get_effective_speed(speed_limit, temporary_speed)
         if effective_speed is not None: #to filter illegal speed limit values
             clean_data.append((crash_year, crash_severity, effective_speed))
-
     return clean_data
 
 def extract_valid_values(clean_data, target_col_index):
@@ -142,13 +140,14 @@ def unique_values(table: list, col_index: int) -> list:
 
 
 def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -> None:
-    """Prints a table outlining the number of crashes in a given year for a given speed limit"""
-    data = read_csv_data(
-        DATA_FILE, ["crashYear", "speedLimit", "crashSeverity" ,"temporarySpeedLimit"])
-    severity_types = unique_values(data, 2)
+    """
+    Prints a table outlining the number of crashes in a given year for a given speed limit
+    based on clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    """    
+    severity_types = unique_values(clean_data, 1)  # Index 1 is crashSeverity
     print("Crash Severity by Classification")
-    print(f"Speed: {speed_of_interest}")
     print(f"Year: {year_of_interest}")
+    print(f"Speed Limit: {speed_of_interest}")
     print()
     results = [] #accumulate total and store results in a list of tuple (type, count)
     total_count = 0 #use this to accumulate all kinds of accidents
@@ -156,13 +155,9 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     for severity_type in severity_types:
         # for loop to go through each severity_type
         count = 0
-        for year, speed_limit, crash_type, temporary_speed in data:
-            effective_speed = get_effective_speed(speed_limit, temporary_speed)
-            if effective_speed is None:
-                continue  # skip invalid data
-
-            if (year == year_of_interest) and (effective_speed == speed_of_interest) and (crash_type == severity_type):
-                count += 1
+        for crashYear, crashSeverity, effectiveSpeed in clean_data:
+                if (crashYear == year_of_interest) and (effectiveSpeed == speed_of_interest) and ( crashSeverity == severity_type):
+                    count += 1
 
         results.append((severity_type, count))
         total_count += count
@@ -172,7 +167,7 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     else:
         for severity_type, count in results:
             print(f"{severity_type}: {count}")
-pass
+            
 
 def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
@@ -214,7 +209,7 @@ def main():
 
     global crash_years, speed_limits, raw_data, clean_data   ### set crash year as global in the program
     raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
-    clean_data = prepare_clean_data(raw_data) #clean_data include crashYear, effective_speed_limits, crashSeverity
+    clean_data = prepare_clean_data(raw_data) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
     speed_limits = extract_valid_values(clean_data, 2) 
 
@@ -229,10 +224,8 @@ def main():
     if option == 0:
         """this is to read user input year"""
         year_of_interest = read_valid_int("Please enter crash year.", crash_years, "Year")
-        #year_of_interest    = read_year()
         """this is to read user input speed limit"""
         speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limits, "Speed Limit")
-        #speed_of_interest = read_speed_limit()
         """this calls the print function"""
         print_crash_severity_report (year_of_interest, speed_of_interest)
 
