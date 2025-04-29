@@ -24,8 +24,16 @@ def prepare_clean_data(raw_data):
     Prepare cleaned data with effective speed calculated.
     Input raw_data: list of (crashYear, speedLimit, crashSeverity, temporarySpeedLimit)
     Output clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    Only records with valid effective speed are included
     """
-    pass
+    clean_data = []
+
+    for crash_year, speed_limit, crash_severity, temporary_speed in raw_data:
+        effective_speed = get_effective_speed(speed_limit, temporary_speed)
+        if effective_speed is not None: #to filter illegal speed limit values
+            clean_data.append((crash_year, crash_severity, effective_speed))
+
+    return clean_data
 
 def get_valid_values(filename, columns, target_col_index):
     """a generic function to read valid unique values in dataset,
