@@ -156,8 +156,8 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
         # for loop to go through each severity_type
         count = 0
         for crashYear, crashSeverity, effectiveSpeed in clean_data:
-                if (crashYear == year_of_interest) and (effectiveSpeed == speed_of_interest) and ( crashSeverity == severity_type):
-                    count += 1
+            if (crashYear == year_of_interest) and (effectiveSpeed == speed_of_interest) and ( crashSeverity == severity_type):
+                count += 1
 
         results.append((severity_type, count))
         total_count += count
