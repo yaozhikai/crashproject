@@ -208,7 +208,11 @@ def main():
 
     elif option == 1:
         ###function to generate All Years Crash Severity Report
-        print ("tba")
+        data = read_csv_data(DATA_FILE, ["crashYear", "crashSeverity"]) #read crashYear and crashSeverity for processing
+        crash_years_list = unique_values(data, 0)
+        severity_types = unique_values(data, 1)
+
+        print (severity_types)
 
     elif option == 2:
         plot_crash_over_time()
