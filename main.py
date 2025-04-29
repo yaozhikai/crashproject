@@ -167,7 +167,23 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     else:
         for severity_type, count in results:
             print(f"{severity_type}: {count}")
-            
+
+def accumulate_year_severity(clean_data, crash_years, severity_types):
+    """a generic accumulator to generate list of tuples contain
+    (year, severity, count)
+    """
+    result = []
+
+    for year in crash_years:
+        for severity in severity_types:
+            count = 0
+            for record in clean_data:
+                record_year, record_severity , effective_speed = record
+                if record_year == year and record_severity == severity:
+                    count += 1
+            result.append((year, severity, count))
+
+    return result
 
 def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
@@ -212,6 +228,7 @@ def main():
     clean_data = prepare_clean_data(raw_data) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
     speed_limits = extract_valid_values(clean_data, 2) 
+    severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
 
 
     menu_options = [
@@ -231,11 +248,9 @@ def main():
 
     elif option == 1:
         ###function to generate All Years Crash Severity Report
-        data = read_csv_data(DATA_FILE, ["crashYear", "crashSeverity"]) #read crashYear and crashSeverity for processing
-        crash_years_list = unique_values(data, 0)
-        severity_types = unique_values(data, 1)
+        accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+        print (accumulated_all_years)
 
-        print (severity_types)
 
     elif option == 2:
         plot_crash_over_time()
