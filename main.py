@@ -35,25 +35,26 @@ def prepare_clean_data(raw_data):
 
     return clean_data
 
-def get_valid_values(filename, columns, target_col_index):
+def extract_valid_values(clean_data, target_col_index):
     """a generic function to read valid unique values in dataset,
     use this dynamic function to replace pre-defined year and speed tuples
     """
-    data = read_csv_data(filename, columns) #read column in dataset
-    valid_values = unique_values(data, target_col_index) #get unique value from the column
+    valid_values = unique_values(clean_data, target_col_index) #get unique value from clean_data
     valid_values.sort()
     return tuple(valid_values)
 
-def filter_valid_speed(DATA_FILE):
+
+def filter_valid_speed(raw_data, ):
     """assume valid speed limits are multiples of 10,
     filter unique speed values to return a tuple of leagal speed"""
-    raw_speed_limits = get_valid_values(DATA_FILE, ["speedLimit"], 0) #get speed from csv file
+    raw_speed_limits = get_valid_values(raw_data, 1, 3) #get speed from raw data
     valid_speeds = []
     for value in raw_speed_limits:
         if value % 10 == 0: #filter legal values- assume it's multiple of 10
             valid_speeds.append(int(value))
     valid_speeds.sort()
     return tuple(valid_speeds)
+pass
 
 def get_effective_speed(speed_limit, temporary_speed):
     """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
@@ -207,14 +208,15 @@ def main():
     Process steps:
     1. Read raw data as a list of tuples containing (crashYear, speedLimit, crashSeverity, temporarySpeedLimit).
     2. Generate a cleaned list of tuples containing (crashYear, crashSeverity, effectiveSpeedLimit).
-    3. Perform reporting and visualization functions based on the cleaned data.   
+    3. Extract legal year and speed limit from clean_data
+    4. Perform reporting and visualization functions based on the cleaned data.   
     """
 
     global crash_years, speed_limits, raw_data, clean_data   ### set crash year as global in the program
-    crash_years = get_valid_values(DATA_FILE, ["crashYear"], 0)
-    speed_limits = filter_valid_speed(DATA_FILE)
     raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
     clean_data = prepare_clean_data(raw_data) #clean_data include crashYear, effective_speed_limits, crashSeverity
+    crash_years = extract_valid_values(clean_data, 0) 
+    speed_limits = extract_valid_values(clean_data, 2) 
 
 
     menu_options = [
