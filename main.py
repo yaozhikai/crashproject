@@ -190,7 +190,8 @@ def main():
     speed_limits = filter_valid_speed(DATA_FILE)
 
     menu_options = [
-        "Crash Severity Report",
+        "Crash Severity Report (singel year and single speed limit)",
+        "Crash Severity Report (All years)",
         "Crash Reports Over Time Graph",
         "Exit"
     ]
@@ -204,9 +205,15 @@ def main():
         #speed_of_interest = read_speed_limit()
         """this calls the print function"""
         print_crash_severity_report (year_of_interest, speed_of_interest)
+
     elif option == 1:
-        plot_crash_over_time()
+        ###function to generate All Years Crash Severity Report
+        print ("tba")
+
     elif option == 2:
+        plot_crash_over_time()
+
+    elif option == 3:
         print("Bye")
 
 main ()
