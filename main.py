@@ -18,6 +18,15 @@ import matplotlib.pyplot as plt
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
 
+def prepare_clean_data(raw_data):
+    """
+    New Solution:
+    Prepare cleaned data with effective speed calculated.
+    Input raw_data: list of (crashYear, speedLimit, crashSeverity, temporarySpeedLimit)
+    Output clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    """
+    pass
+
 def get_valid_values(filename, columns, target_col_index):
     """a generic function to read valid unique values in dataset,
     use this dynamic function to replace pre-defined year and speed tuples
@@ -154,6 +163,7 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -
     else:
         for severity_type, count in results:
             print(f"{severity_type}: {count}")
+pass
 
 def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
@@ -170,6 +180,7 @@ def plot_crash_over_time():
     axes.set_ylabel("Amount of Accidents")
     axes.set_title("Crash Over Time Graph", size = 15)
     plt.show()
+pass
 
 def get_crash_each_year(data):
     """decomposition function to accumulate yearly crash data"""
@@ -181,13 +192,22 @@ def get_crash_each_year(data):
                 count +=1
         crash_each_year.append(count)
     return crash_each_year
-            
-def main():
-    """Small application that presents tables and graphs based on crash data"""
+pass
 
-    global crash_years, speed_limits ### set crash year as global in the program
+def main():
+    """Small application that presents tables and graphs based on crash data
+    Process steps:
+    1. Read raw data as a list of tuples containing (crashYear, speedLimit, crashSeverity, temporarySpeedLimit).
+    2. Generate a cleaned list of tuples containing (crashYear, crashSeverity, effectiveSpeedLimit).
+    3. Perform reporting and visualization functions based on the cleaned data.   
+    """
+
+    global crash_years, speed_limits, raw_data, clean_data   ### set crash year as global in the program
     crash_years = get_valid_values(DATA_FILE, ["crashYear"], 0)
     speed_limits = filter_valid_speed(DATA_FILE)
+    raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
+    clean_data = prepare_clean_data(raw_data) #clean_data include crashYear, effective_speed_limits, crashSeverity
+
 
     menu_options = [
         "Crash Severity Report (singel year and single speed limit)",
