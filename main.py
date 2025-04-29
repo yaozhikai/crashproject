@@ -74,7 +74,8 @@ def read_valid_int (prompt, valid_data, value='value'):
         if user_int in valid_data: #verify if input is in tuple (valid)
             return user_int
         else:
-            print (f'{value} must be between {min(valid_data)} and {max(valid_data)}') 
+            print (f"Warning: {value} {user_int} does not exist in the dataset.")
+            print (f"Available {value.lower()}s are: {sorted(valid_data)}.") 
             return read_valid_int(prompt, valid_data, value)   
     else:
         print ('Input must be one integer.')
