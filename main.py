@@ -206,6 +206,26 @@ def transform_to_table(accumulated_data, crash_years, severity_types):
 
     return table
 
+def print_report_all_year_severity(table_data, crash_years, severity_types):
+    """
+    Print a report showing crash counts by year and severity type.
+    """
+    # print header
+    header = ["Year"]
+    for severity in severity_types:
+        header.append(severity)
+    header.append("Total")
+
+    print(*header, sep="       ") 
+
+    # print each data row
+    for row in table_data:
+        year = row[0]
+        counts = row[1:]
+        year_total = sum(counts)
+
+        print(year, *counts, year_total, sep="              ")
+
 def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
     data = read_csv_data(DATA_FILE, ["crashYear"]) #read crashyear column
@@ -271,7 +291,7 @@ def main():
         ###function to generate All Years Crash Severity Report
         accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
         table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
-        print (table_data)
+        print_report_all_year_severity(table_data, crash_years, severity_types)
 
 
     elif option == 2:
