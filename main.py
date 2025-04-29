@@ -96,6 +96,30 @@ def read_valid_int (prompt, valid_data, value='value'):
     else:
         print ('Input must be one integer.')
         return read_valid_int(prompt, valid_data, value)
+    
+def get_plot_year_range(crash_years):   #For part 2 feature 5: 
+    """
+    Prompt user to enter a start and end year within available crash years
+    Validate input is legal
+    Returns a tuple containing start and end year selected by user.
+    """
+    print(f"Available years: {min(crash_years)} to {max(crash_years)}")
+    
+    start_year = read_valid_int("Please enter start year.", crash_years, "Start Year")
+    end_year = read_valid_int("Please enter end year later than start year.", crash_years, "End Year")
+    
+    while end_year < start_year:
+        print("Warning: End year must not be earlier than start year. Please try again.")
+        end_year = read_valid_int("Please enter end year later than start year.", crash_years, "End Year")
+
+    return start_year, end_year
+
+def get_plot_time_and_types(crash_years, severity_types):
+    """Prompt user to select time range and crash severity types for plotting."""
+    start_year, end_year = get_plot_year_range(crash_years)
+    # selected_types = get_plot_severity_types(severity_types)
+    # return start_year, end_year, selected_types
+pass
 
 def menu_select(options: list[str]) -> int:
     """
@@ -295,7 +319,7 @@ def main():
 
 
     elif option == 2:
-        plot_crash_over_time()
+        print(get_plot_year_range(crash_years))
 
     elif option == 3:
         print("Bye")
