@@ -62,28 +62,22 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
-    - If user press enter, return a list of all valid value for full summary
     - If user input a valid integer within tuple, return the integer
     - If input is invalid, prompt again."""
     print(prompt)
     print(f"{value} Valid range: {min(valid_data)} to {max(valid_data)}")
-    print(f"Or press Enter to select all {value.lower()}s.")
 
-    user_value = input(f'{value}: ')
-    result = []
+    user_input_str = input(f'{value}: ')
 
-    if len(user_value) == 0: #default value, select all tuple
-        return list(valid_data)
-    elif user_value.isdigit():  #verify if input is digit
-        user_int = int(user_value)
+    if user_input_str.isdigit():  #verify if input is digit
+        user_int = int(user_input_str)
         if user_int in valid_data: #verify if input is in tuple (valid)
-            result.append(user_int) #append valid input to list for later processing
-            return result
+            return user_int
         else:
             print (f'{value} must be between {min(valid_data)} and {max(valid_data)}') 
             return read_valid_int(prompt, valid_data, value)   
     else:
-        print ('Input must be an integer.')
+        print ('Input must be one integer.')
         return read_valid_int(prompt, valid_data, value)
 
 def menu_select(options: list[str]) -> int:
