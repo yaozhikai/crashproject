@@ -148,6 +148,29 @@ def get_plot_time_and_types(crash_years, severity_types):
     return start_year, end_year, selected_types
 pass
 
+def prepare_lists_for_plot(accumulated_data, selected_types, start_year, end_year):
+    """
+    use accumulated (year, severity, count) data to build lists for plotting
+    return:
+    years (list range of start and end year +1)
+    count_list: count_by_year for each selected seseverity
+    """
+    years = list(range(start_year, end_year+1))
+    counts_list = []
+
+    for severity in selected_types:
+        counts = []
+        for year in years:
+            count =  0
+            for y, sev,c in accumulated_data:
+                if y == year and sev == severity:
+                    count = c
+                    break
+            counts.append(count)
+        counts_list.append(counts)
+    return years, counts_list
+                    
+
 def menu_select(options: list[str]) -> int:
     """
     - Prints a list of enumerated options and collects the users
@@ -346,7 +369,9 @@ def main():
 
 
     elif option == 2:
-        print(get_plot_severity_types(severity_types))
+        accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+        start_year, end_year, selected_types = get_plot_time_and_types(crash_years, severity_types)
+        print(prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year))
 
     elif option == 3:
         print("Bye")
