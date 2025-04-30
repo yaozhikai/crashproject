@@ -202,7 +202,7 @@ def unique_values(table: list, col_index: int) -> list:
     return out
 
 
-def print_crash_severity_report(year_of_interest: int, speed_of_interest: int) -> None:
+def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, clean_data) -> None:
     """
     Prints a table outlining the number of crashes in a given year for a given speed limit
     based on clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
@@ -269,7 +269,7 @@ def transform_to_table(accumulated_data, crash_years, severity_types):
 
     return table
 
-def print_report_all_year_severity(table_data, crash_years, severity_types):
+def print_report_all_year_severity(table_data, severity_types):
     """
     Print a report showing crash counts by year and severity type.
     """
@@ -320,7 +320,6 @@ def main():
     4. Perform reporting and visualization functions based on the cleaned data.   
     """
 
-    global crash_years, speed_limits, raw_data, clean_data, severity_types   ### set crash year as global in the program
     raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
     clean_data = prepare_clean_data(raw_data) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
@@ -329,25 +328,25 @@ def main():
 
 
     menu_options = [
-        "Crash Severity Report (singel year and single speed limit)",
+        "Crash Severity Report (single year and single speed limit)",
         "Crash Severity Report (All years)",
         "Crash Reports Over Time Graph",
         "Exit"
     ]
     option = menu_select(menu_options)
     if option == 0:
-        """this is to read user input year"""
+        #this is to read user input year
         year_of_interest = read_valid_int("Please enter crash year.", crash_years, "Year")
-        """this is to read user input speed limit"""
+        #this is to read user input speed limit
         speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limits, "Speed Limit")
-        """this calls the print function"""
-        print_crash_severity_report (year_of_interest, speed_of_interest)
+        #this calls the print function
+        print_crash_severity_report (year_of_interest, speed_of_interest, clean_data)
 
     elif option == 1:
         ###function to generate All Years Crash Severity Report
         accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
         table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
-        print_report_all_year_severity(table_data, crash_years, severity_types)
+        print_report_all_year_severity(table_data, severity_types)
 
 
     elif option == 2:
