@@ -42,17 +42,7 @@ def extract_valid_values(clean_data, target_col_index):
     return tuple(valid_values)
 
 
-def filter_valid_speed(raw_data, ):
-    """assume valid speed limits are multiples of 10,
-    filter unique speed values to return a tuple of leagal speed"""
-    raw_speed_limits = get_valid_values(raw_data, 1, 3) #get speed from raw data
-    valid_speeds = []
-    for value in raw_speed_limits:
-        if value % 10 == 0: #filter legal values- assume it's multiple of 10
-            valid_speeds.append(int(value))
-    valid_speeds.sort()
-    return tuple(valid_speeds)
-pass
+
 
 def get_effective_speed(speed_limit, temporary_speed):
     """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
@@ -318,34 +308,8 @@ def plot_trends_over_time (years, selected_types, counts_lists):
     axes.grid(True)
     plt.show()
 
-def plot_crash_over_time(): 
-    """plot a bar chart showing total crash amout for each year"""
-    data = read_csv_data(DATA_FILE, ["crashYear"]) #read crashyear column
 
-    ys = get_crash_each_year(data) #give crash each year to Y axes
 
-    xs = crash_years
-
-    axes = plt.axes()
-    axes.bar(xs, ys)
-    axes.grid(True)
-    axes.set_xlabel("Year")
-    axes.set_ylabel("Amount of Accidents")
-    axes.set_title("Crash Over Time Graph", size = 15)
-    plt.show()
-pass
-
-def get_crash_each_year(data):
-    """decomposition function to accumulate yearly crash data"""
-    crash_each_year = []
-    for crash_year in crash_years:
-        count = 0
-        for year in data:
-            if year[0] == crash_year:
-                count +=1
-        crash_each_year.append(count)
-    return crash_each_year
-pass
 
 def main():
     """Small application that presents tables and graphs based on crash data
