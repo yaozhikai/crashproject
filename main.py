@@ -114,11 +114,38 @@ def get_plot_year_range(crash_years):   #For part 2 feature 5:
 
     return start_year, end_year
 
+def get_plot_severity_types(severity_types):
+    """
+    Prompt user to select desired crash severity types using (y/n) prompts.
+    If none selected, warn and restart the selection process.
+    Returns a list of selected types.
+    """
+    while True: #restart the loop if user select n for all types
+        selected = []
+        print("Please select desired crash severity types.")
+        
+        for severity in severity_types:
+            while True:
+                response = input(f"  {severity} (y/n): ").lower()
+                if response == 'y':
+                    selected.append(severity)
+                    break
+                elif response == 'n':
+                    break
+                else:
+                    print("Invalid input. Please enter 'y' or 'n'.")
+
+        if len(selected) > 0:
+            return selected
+        else:
+            print("At least one severity type must be selected.")
+            print("Please try again.")
+
 def get_plot_time_and_types(crash_years, severity_types):
     """Prompt user to select time range and crash severity types for plotting."""
     start_year, end_year = get_plot_year_range(crash_years)
-    # selected_types = get_plot_severity_types(severity_types)
-    # return start_year, end_year, selected_types
+    selected_types = get_plot_severity_types(severity_types)
+    return start_year, end_year, selected_types
 pass
 
 def menu_select(options: list[str]) -> int:
@@ -288,7 +315,7 @@ def main():
     4. Perform reporting and visualization functions based on the cleaned data.   
     """
 
-    global crash_years, speed_limits, raw_data, clean_data   ### set crash year as global in the program
+    global crash_years, speed_limits, raw_data, clean_data, severity_types   ### set crash year as global in the program
     raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
     clean_data = prepare_clean_data(raw_data) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
@@ -319,7 +346,7 @@ def main():
 
 
     elif option == 2:
-        print(get_plot_year_range(crash_years))
+        print(get_plot_severity_types(severity_types))
 
     elif option == 3:
         print("Bye")
