@@ -146,7 +146,6 @@ def get_plot_time_and_types(crash_years, severity_types):
     start_year, end_year = get_plot_year_range(crash_years)
     selected_types = get_plot_severity_types(severity_types)
     return start_year, end_year, selected_types
-pass
 
 def prepare_lists_for_plot(accumulated_data, selected_types, start_year, end_year):
     """
@@ -300,6 +299,25 @@ def print_report_all_year_severity(table_data, crash_years, severity_types):
 
         print(year, *counts, year_total, sep="              ")
 
+def plot_trends_over_time (years, selected_types, counts_lists):
+    """
+    plot trend line over user's time range by selected severity type
+    """
+    axes = plt.axes()
+
+    for i in range(len(selected_types)):
+        xs = years
+        ys = counts_lists[i]
+        axes.plot(xs, ys, label = selected_types[i], marker = 'o')
+
+    axes.set_xlabel("Year")
+    axes.set_xticks(years) #set years as x ticks, aviod float
+    axes.set_ylabel("Crash Count")
+    axes.set_title("Crash Over Time by Severity Type")
+    axes.legend()
+    axes.grid(True)
+    plt.show()
+
 def plot_crash_over_time(): 
     """plot a bar chart showing total crash amout for each year"""
     data = read_csv_data(DATA_FILE, ["crashYear"]) #read crashyear column
@@ -371,7 +389,8 @@ def main():
     elif option == 2:
         accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
         start_year, end_year, selected_types = get_plot_time_and_types(crash_years, severity_types)
-        print(prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year))
+        years, counts_lists = prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year)
+        plot_trends_over_time (years, selected_types, counts_lists)
 
     elif option == 3:
         print("Bye")
