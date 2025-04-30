@@ -333,29 +333,35 @@ def main():
         "Crash Reports Over Time Graph",
         "Exit"
     ]
-    option = menu_select(menu_options)
-    if option == 0:
-        #this is to read user input year
-        year_of_interest = read_valid_int("Please enter crash year.", crash_years, "Year")
-        #this is to read user input speed limit
-        speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limits, "Speed Limit")
-        #this calls the print function
-        print_crash_severity_report (year_of_interest, speed_of_interest, clean_data)
 
-    elif option == 1:
-        ###function to generate All Years Crash Severity Report
-        accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
-        table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
-        print_report_all_year_severity(table_data, severity_types)
+    while True:
+        option = menu_select(menu_options)
+
+        if option == 0:
+            #this is to read user input year
+            year_of_interest = read_valid_int("Please enter crash year.", crash_years, "Year")
+            #this is to read user input speed limit
+            speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limits, "Speed Limit")
+            #this calls the print function
+            print_crash_severity_report (year_of_interest, speed_of_interest, clean_data)
+
+        elif option == 1:
+            ###function to generate All Years Crash Severity Report
+            accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+            table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
+            print_report_all_year_severity(table_data, severity_types)
 
 
-    elif option == 2:
-        accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
-        start_year, end_year, selected_types = get_plot_time_and_types(crash_years, severity_types)
-        years, counts_lists = prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year)
-        plot_trends_over_time (years, selected_types, counts_lists)
+        elif option == 2:
+            accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+            start_year, end_year, selected_types = get_plot_time_and_types(crash_years, severity_types)
+            years, counts_lists = prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year)
+            plot_trends_over_time (years, selected_types, counts_lists)
 
-    elif option == 3:
-        print("Bye")
+        elif option == 3:
+            print("Bye")
+            break
+
+        print ("\n")
 
 main ()
