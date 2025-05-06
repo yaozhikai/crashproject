@@ -11,6 +11,35 @@ Features:
 - Plot graphical report of accident amounts by year.
 """
 
+"""
+NOTES FOR FUTURE REFACTORING FOR A3:
+
+To enhance maintainability and advanced data analysis (e.g. correlation with weather), 
+the following parts of the current code will be considered for refactoring using pandas:
+
+1. Data Cleaning (prepare_clean_data):
+   - Replace tuple iteration with DataFrame filtering and a processed 'effectiveSpeed' column.
+
+2. Accumulation (accumulate_year_severity, transform_to_table):
+   - Use DataFrame operations such as groupby and unstack to simplify aggregation.
+
+3. Printing Reports:
+   - Replace nested loops with formatted DataFrame output 
+     (to be verified: is the DataFrame already structured, ready for print?).
+
+4. Single-Year Report (print_crash_severity_report):
+   - Apply filters directly on the DataFrame for cleaner logic.
+
+5. Plot Preparation:
+   - Similar to (3) and (4), use filtered DataFrame slices to generate x and y values for plotting.
+
+Other improvements to be considered:
+- Correlation analysis on additional factors such as weather 
+  to examine their influence on accident severity.
+
+- New dataset still not decided.
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
