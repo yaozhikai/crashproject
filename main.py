@@ -61,6 +61,14 @@ def prepare_clean_data(raw_data):
         if effective_speed is not None: #to filter illegal speed limit values
             clean_data.append((crash_year, crash_severity, effective_speed))
     return clean_data
+pass
+
+def compute_processed_speed_series(df):
+    """process speed limit, 
+    prioritise temporarySpeedLimit unless not exists
+    """
+    return df['temporarySpeedLimit'].combine_first(df['speedLimit'])
+
 
 def extract_valid_values(clean_data, target_col_index):
     """a generic function to read valid unique values in dataset,
@@ -96,7 +104,7 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     return list(desired_columns.itertuples(index=False, name=None))
 pass
 
-def load_raw_dataframe(filename, columns, dtypes):
+def load_raw_dataframe(filename, columns, dtypes, index_col = None):
     """This function will replace original read_csv function
     It will load raw crash data from csv file with given columns and data types.
     Parameters:
@@ -104,22 +112,12 @@ def load_raw_dataframe(filename, columns, dtypes):
     - required columns (list of cols)
     - dtypes (tbc, still researching, flexible for future inclusion of date and coordinates?
     speed use float as they contains NaN
+    - index (use OBJECTID as unique id for downstream processing)
     )
     Returns:
     DF contains all selected colms with specified data type.
     """
-    return pd.read_csv(filename, usecols=columns, dtype=dtypes)
-
-print(load_raw_dataframe(
-    DATA_FILE,
-    columns=["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"],
-    dtypes={
-        "crashYear": "int16",
-        "speedLimit": "float32",
-        "temporarySpeedLimit": "float32",
-        "crashSeverity": "category"
-    }
-))
+    return pd.read_csv(filename, usecols=columns, dtype=dtypes, index_col=index_col)
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
@@ -372,11 +370,25 @@ def main():
     1. Read raw data as a list of tuples containing (crashYear, speedLimit, crashSeverity, temporarySpeedLimit).
     2. Generate a cleaned list of tuples containing (crashYear, crashSeverity, effectiveSpeedLimit).
     3. Extract legal year and speed limit from clean_data
-    4. Perform reporting and visualization functions based on the cleaned data.   
+    4. Perform reporting and visualization functions based on the cleaned data.
     """
 
-    raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
-    clean_data = prepare_clean_data(raw_data) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    #raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
+    raw_data_df = load_raw_dataframe(
+    DATA_FILE,
+    columns=["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"],
+    dtypes={
+        "crashYear": "int16",
+        "speedLimit": "float32",
+        "temporarySpeedLimit": "float32",
+        "crashSeverity": "category"
+    },
+    index_col="OBJECTID"
+    ) #also include objected ID as unique identifier if pd.join is needed in future
+    processed_speed_series = compute_processed_speed_series(raw_data_df)
+    print(processed_speed_series)
+    
+    clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
     speed_limits = extract_valid_values(clean_data, 2) 
     severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
