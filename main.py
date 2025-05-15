@@ -291,34 +291,21 @@ def unique_values(table: list, col_index: int) -> list:
     return out
 
 
-def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, clean_data) -> None:
+def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, df) :
     """
     Prints a table outlining the number of crashes in a given year for a given speed limit
-    based on clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    based on DataFrame
     """    
-    severity_types = unique_values(clean_data, 1)  # Index 1 is crashSeverity
+    filtered = df[(df['crashYear'] == year_of_interest) & (df['effectiveSpeed'] == speed_of_interest)]
+    if filtered.empty:
+        print(f"Warning: No records found for year {year_of_interest} and speed {speed_of_interest}.")
+        return
     print("Crash Severity by Classification")
     print(f"Year: {year_of_interest}")
-    print(f"Speed Limit: {speed_of_interest}")
-    print()
-    results = [] #accumulate total and store results in a list of tuple (type, count)
-    total_count = 0 #use this to accumulate all kinds of accidents
-    
-    for severity_type in severity_types:
-        # for loop to go through each severity_type
-        count = 0
-        for crashYear, crashSeverity, effectiveSpeed in clean_data:
-            if (crashYear == year_of_interest) and (effectiveSpeed == speed_of_interest) and ( crashSeverity == severity_type):
-                count += 1
-
-        results.append((severity_type, count))
-        total_count += count
-        
-    if total_count == 0: #example: year 2013/ speed 110
-        print ('Warning: No records found in this category of year and speed limit.')
-    else:
-        for severity_type, count in results:
-            print(f"{severity_type}: {count}")
+    print(f"Speed Limit: {speed_of_interest}\n")
+    summary = filtered['crashSeverity'].value_counts().reindex(SEVERITY_ORDER, fill_value=0)
+    for severity, count in summary.items():
+        print(f"{severity}: {count}")
 
 def accumulate_year_severity(clean_data, crash_years, severity_types):
     """a generic accumulator to generate list of tuples contain
@@ -461,7 +448,7 @@ def main():
             #this is to read user input speed limit
             speed_of_interest = read_valid_int("Please enter speed limit. Value should be multiple of 10", speed_limits, "Speed Limit")
             #this calls the print function
-            print_crash_severity_report (year_of_interest, speed_of_interest, clean_data)
+            print_crash_severity_report (year_of_interest, speed_of_interest, cleaned_df)
 
         elif option == 1:
             ###function to generate All Years Crash Severity Report
