@@ -63,12 +63,44 @@ def prepare_clean_data(raw_data):
     return clean_data
 pass
 
-def compute_processed_speed_series(df):
-    """process speed limit, 
-    prioritise temporarySpeedLimit unless not exists
+def prepare_clean_df (df):
     """
-    return df['temporarySpeedLimit'].combine_first(df['speedLimit'])
+    Prepare a cleaned DataFrame by using filters:
+    - effective speed limits , insert a new column 'effectiveSpeed'.
 
+    steps:
+    1. Call filter function
+    2. Filter by index for the rows which are valid in filter
+    3. Inserts a new column 'effectiveSpeed' into the cleaned DataFrame.
+    4. Create a new cleaned df
+
+    Parameters:
+        df (raw df)
+        -other filteres will be extended
+
+    Returns:
+        new cleaned with effectiveSpeed, index is OBJECTID
+        """
+    effective_speed = filter_effective_speed_series(df)
+    cleaned_df = df.loc[effective_speed.index].copy() #create a new copy, include all rows which index matches with effectiveSpeed 
+    cleaned_df["effectiveSpeed"] = effective_speed #insert new column for effective speed
+    return cleaned_df.drop(columns=["speedLimit", "temporarySpeedLimit"])
+
+def filter_effective_speed_series(df):
+    """Filter and return a series of effective speed limits by prioritising temporary limits.
+
+    - Prioritises 'temporarySpeedLimit' over 'speedLimit',
+    - Filters out missing values and those not divisible by 10,
+    - Returns a Series of valid effective speeds with integer type ('Int64').
+
+    Parameters:
+        df : Input raw dataframe which has 'temporarySpeedLimit' and 'speedLimit' columns.
+    Returns:
+        pd.Series: A Series containing valid effective speeds, indexed as in the input DataFrame."""
+    processed = df['temporarySpeedLimit'].combine_first(df['speedLimit'])
+    effective_speed = processed[(processed.notna()) &
+                            (processed % 10 == 0)]
+    return effective_speed.astype('Int64') #float in raw data, due to Nan
 
 def extract_valid_values(clean_data, target_col_index):
     """a generic function to read valid unique values in dataset,
@@ -91,6 +123,7 @@ def get_effective_speed(speed_limit, temporary_speed):
         return int(speed_limit)
     else:
         return None  # Both are missing or invalid
+pass
 
 def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     """
@@ -385,9 +418,14 @@ def main():
     },
     index_col="OBJECTID"
     ) #also include objected ID as unique identifier if pd.join is needed in future
-    processed_speed_series = compute_processed_speed_series(raw_data_df)
-    print(processed_speed_series)
     
+    
+    cleaned_df = prepare_clean_df(raw_data_df)
+
+    print(cleaned_df.head())
+
+
+
     clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(clean_data, 0) 
     speed_limits = extract_valid_values(clean_data, 2) 
