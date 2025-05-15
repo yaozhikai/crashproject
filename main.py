@@ -105,16 +105,16 @@ def filter_effective_speed_series(df):
                             (processed % 10 == 0)]
     return effective_speed.astype('Int64') #float in raw data, due to Nan
 
-def extract_valid_values(clean_data, target_col_index):
-    """a generic function to read valid unique values in dataset,
-    use this dynamic function to replace pre-defined year and speed tuples
+def extract_valid_values(df, column_name):
     """
-    valid_values = unique_values(clean_data, target_col_index) #get unique value from clean_data
-    valid_values.sort()
-    return tuple(valid_values)
+    A generic function to extract sorted unique values from df and 
+    required column.
 
+    Parameters: df (cleaed df), column name
 
-
+    Returns: list of sorted unique values    
+    """
+    return sorted(df[column_name].dropna().unique().astype(int))
 
 def get_effective_speed(speed_limit, temporary_speed):
     """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
@@ -440,8 +440,8 @@ def main():
       
     cleaned_df = prepare_clean_df(raw_data_df)
     #clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
-    #crash_years = extract_valid_values(clean_data, 0) 
-    #speed_limits = extract_valid_values(clean_data, 2) 
+    crash_years = extract_valid_values(cleaned_df, column_name='crashYear') 
+    speed_limits = extract_valid_values(cleaned_df, column_name='effectiveSpeed') 
     #severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
 
 
