@@ -94,6 +94,32 @@ def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
     df = pd.read_csv(filename)
     desired_columns = df[columns]
     return list(desired_columns.itertuples(index=False, name=None))
+pass
+
+def load_raw_dataframe(filename, columns, dtypes):
+    """This function will replace original read_csv function
+    It will load raw crash data from csv file with given columns and data types.
+    Parameters:
+    - filename
+    - required columns (list of cols)
+    - dtypes (tbc, still researching, flexible for future inclusion of date and coordinates?
+    speed use float as they contains NaN
+    )
+    Returns:
+    DF contains all selected colms with specified data type.
+    """
+    return pd.read_csv(filename, usecols=columns, dtype=dtypes)
+
+print(load_raw_dataframe(
+    DATA_FILE,
+    columns=["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"],
+    dtypes={
+        "crashYear": "int16",
+        "speedLimit": "float32",
+        "temporarySpeedLimit": "float32",
+        "crashSeverity": "category"
+    }
+))
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
