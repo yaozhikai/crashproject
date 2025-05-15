@@ -49,23 +49,6 @@ CONDITION = "fine"
 # Define fixed severity order for consistent report form
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
-
-def prepare_clean_data(raw_data):
-    """
-    New Solution:
-    Prepare cleaned data with effective speed calculated.
-    Input raw_data: list of (crashYear, speedLimit, crashSeverity, temporarySpeedLimit)
-    Output clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
-    Only records with valid effective speed are included
-    """
-    clean_data = []
-    for crash_year, speed_limit, crash_severity, temporary_speed in raw_data:
-        effective_speed = get_effective_speed(speed_limit, temporary_speed)
-        if effective_speed is not None: #to filter illegal speed limit values
-            clean_data.append((crash_year, crash_severity, effective_speed))
-    return clean_data
-pass
-
 def prepare_clean_df (df):
     """
     Prepare a cleaned DataFrame by using filters:
@@ -426,7 +409,6 @@ def main():
     ) #also include objected ID as unique identifier if pd.join is needed in future
       
     cleaned_df = prepare_clean_df(raw_data_df)
-    #clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
     crash_years = extract_valid_values(cleaned_df, column_name='crashYear') 
     speed_limits = extract_valid_values(cleaned_df, column_name='effectiveSpeed') 
     #severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
