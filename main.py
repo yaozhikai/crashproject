@@ -46,6 +46,9 @@ import matplotlib.pyplot as plt
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
+# Define fixed severity order for consistent report form
+SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
+
 
 def prepare_clean_data(raw_data):
     """
@@ -333,6 +336,7 @@ def accumulate_year_severity(clean_data, crash_years, severity_types):
             result.append((year, severity, count))
 
     return result
+pass
 
 def transform_to_table(accumulated_data, crash_years, severity_types):
     """
@@ -354,6 +358,21 @@ def transform_to_table(accumulated_data, crash_years, severity_types):
         table.append(tuple(row))
 
     return table
+pass
+
+def generate_crash_table_by_year(df):
+    """Gerenate a crash count table by year and severity type.
+    Replace original design through accumulator and list of tuples.
+
+    Parameter: cleaned df
+
+    Return: DataFrame contains Year and Severity
+    """
+    crash_summary = df.groupby(['crashYear', 'crashSeverity'],observed=False).size().unstack(fill_value=0) 
+    #fill 0 for a cell which has no accident record, add speed limit as another filter in displaying?
+    crash_summary = crash_summary.reindex(columns = SEVERITY_ORDER, fill_value = 0)
+    crash_summary['Total'] = crash_summary.sum(axis = 1)
+    return crash_summary
 
 def print_report_all_year_severity(table_data, severity_types):
     """
@@ -418,18 +437,12 @@ def main():
     },
     index_col="OBJECTID"
     ) #also include objected ID as unique identifier if pd.join is needed in future
-    
-    
+      
     cleaned_df = prepare_clean_df(raw_data_df)
-
-    print(cleaned_df.head())
-
-
-
-    clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
-    crash_years = extract_valid_values(clean_data, 0) 
-    speed_limits = extract_valid_values(clean_data, 2) 
-    severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
+    #clean_data = prepare_clean_data(raw_data_df) #clean_data: list of (crashYear, crashSeverity, effectiveSpeed)
+    #crash_years = extract_valid_values(clean_data, 0) 
+    #speed_limits = extract_valid_values(clean_data, 2) 
+    #severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
 
 
     menu_options = [
@@ -452,10 +465,11 @@ def main():
 
         elif option == 1:
             ###function to generate All Years Crash Severity Report
-            accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
-            table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
-            print_report_all_year_severity(table_data, severity_types)
-
+            #accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+            #table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
+            #print_report_all_year_severity(table_data, severity_types)
+            table_df = generate_crash_table_by_year(cleaned_df)
+            print(table_df)
 
         elif option == 2:
             accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
