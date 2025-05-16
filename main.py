@@ -209,29 +209,6 @@ def get_plot_time_and_types(crash_years, severity_types):
     selected_types = get_plot_severity_types(severity_types)
     return start_year, end_year, selected_types
 
-def prepare_lists_for_plot(accumulated_data, selected_types, start_year, end_year):
-    """
-    use accumulated (year, severity, count) data to build lists for plotting
-    return:
-    years (list range of start and end year +1)
-    count_list: count_by_year for each selected seseverity
-    """
-    years = list(range(start_year, end_year+1))
-    counts_list = []
-
-    for severity in selected_types:
-        counts = []
-        for year in years:
-            count =  0
-            for y, sev,c in accumulated_data:
-                if y == year and sev == severity:
-                    count = c
-                    break
-            counts.append(count)
-        counts_list.append(counts)
-    return years, counts_list
-pass
-
 def prepare_lists_from_df(df, selected_types, start_year, end_year):
     """
     Extract years and count lists for plotting from crash summary table.
@@ -272,30 +249,6 @@ def menu_select(options: list[str]) -> int:
         selection = int(input(prompt))
     return selection
 
-
-def unique_values(table: list, col_index: int) -> list:
-    """Given a list of tuple returns a sorted list of unique values of a given row.
-    Example:
-    animals = [
-        ("cat", "dog"),
-        ("bird", "dog"),
-        ("fish", "fish")
-    ]
-
-    print(unique_values(animals, 0))
-    ['bird', 'cat', 'fish']
-
-    print(unique_values(animals, 1))
-    ['dog', 'fish']
-    """
-    out = []
-    for row in table:
-        if row[col_index] not in out:
-            out.append(row[col_index])
-    out.sort()
-    return out
-
-
 def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, df) :
     """
     Prints a table outlining the number of crashes in a given year for a given speed limit
@@ -312,46 +265,6 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, d
     for severity, count in summary.items():
         print(f"{severity}: {count}")
 
-def accumulate_year_severity(clean_data, crash_years, severity_types):
-    """a generic accumulator to generate list of tuples contain
-    (year, severity, count)
-    """
-    result = []
-
-    for year in crash_years:
-        for severity in severity_types:
-            count = 0
-            for record in clean_data:
-                record_year, record_severity , effective_speed = record
-                if record_year == year and record_severity == severity:
-                    count += 1
-            result.append((year, severity, count))
-
-    return result
-pass
-
-def transform_to_table(accumulated_data, crash_years, severity_types):
-    """
-    Transforms (year, severity, count) tuples into a list of rows:
-    [(year, count1, count2, ...)] based on severity_types
-      ['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash'].
-    """
-    table = []
-
-    for year in crash_years:
-        row = [year]
-        for severity in severity_types:
-            count = 0
-            for y, sev, c in accumulated_data:
-                if y == year and sev == severity:
-                    count = c
-                    break
-            row.append(count)
-        table.append(tuple(row))
-
-    return table
-pass
-
 def generate_crash_table_by_year(df):
     """Gerenate a crash count table by year and severity type.
     Replace original design through accumulator and list of tuples.
@@ -365,26 +278,6 @@ def generate_crash_table_by_year(df):
     crash_summary = crash_summary.reindex(columns = SEVERITY_ORDER, fill_value = 0)
     crash_summary['Total'] = crash_summary.sum(axis = 1)
     return crash_summary
-
-def print_report_all_year_severity(table_data, severity_types):
-    """
-    Print a report showing crash counts by year and severity type.
-    """
-    # print header
-    header = ["Year"]
-    for severity in severity_types:
-        header.append(severity)
-    header.append("Total")
-
-    print(*header, sep="       ") 
-
-    # print each data row
-    for row in table_data:
-        year = row[0]
-        counts = row[1:]
-        year_total = sum(counts)
-
-        print(year, *counts, year_total, sep="              ")
 
 def plot_trends_over_time (years, selected_types, counts_lists):
     """
@@ -433,8 +326,6 @@ def main():
     cleaned_df = prepare_clean_df(raw_data_df)
     crash_years = extract_valid_values(cleaned_df, column_name='crashYear') 
     speed_limits = extract_valid_values(cleaned_df, column_name='effectiveSpeed') 
-    #severity_types = unique_values(clean_data, 1) #['Fatal Crash', 'Minor Crash', 'Non-Injury Crash', 'Serious Crash']
-
 
     menu_options = [
         "Crash Severity Report (single year and single speed limit)",
@@ -456,14 +347,10 @@ def main():
 
         elif option == 1:
             ###function to generate All Years Crash Severity Report
-            #accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
-            #table_data = transform_to_table(accumulated_all_years, crash_years, severity_types)
-            #print_report_all_year_severity(table_data, severity_types)
             table_df = generate_crash_table_by_year(cleaned_df)
             print(table_df)
 
         elif option == 2:
-            #accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
             table_df = generate_crash_table_by_year(cleaned_df)
             start_year, end_year, selected_types = get_plot_time_and_types(crash_years, SEVERITY_ORDER)
             years, counts_lists = prepare_lists_from_df(table_df, selected_types, start_year, end_year)
