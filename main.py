@@ -97,7 +97,12 @@ def extract_valid_values(df, column_name):
 
     Returns: list of sorted unique values    
     """
-    return sorted(df[column_name].dropna().unique().astype(int))
+    unique_values = df[column_name].dropna().unique()
+    cleaned_values = []
+    for value in unique_values:
+        cleaned_values.append(int(value))
+    cleaned_values.sort()
+    return cleaned_values
 
 def get_effective_speed(speed_limit, temporary_speed):
     """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
