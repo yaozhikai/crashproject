@@ -230,7 +230,29 @@ def prepare_lists_for_plot(accumulated_data, selected_types, start_year, end_yea
             counts.append(count)
         counts_list.append(counts)
     return years, counts_list
-                    
+pass
+
+def prepare_lists_from_df(df, selected_types, start_year, end_year):
+    """
+    Extract years and count lists for plotting from crash summary table.
+    Parameters:
+        df (pd.DataFrame): Output from generate_crash_table_by_year()
+        selected_types (list): List of selected severity types
+        start_year (int): Start year for range
+        end_year (int): End year for range
+
+    Returns:
+        tuple: (years, list of counts for each severity type)
+    """
+    df_range = df.loc[start_year:end_year, selected_types] #slice the df with given parameters
+    years = df_range.index.tolist() #Extract the list of years (for x-axis values)
+    counts_lists = []
+    # For each selected severity type, extract a list of crash counts (for y-axis series)
+    for severity in selected_types:
+        counts = df_range[severity].tolist()
+        counts_lists.append(counts)
+    return years, counts_lists
+
 
 def menu_select(options: list[str]) -> int:
     """
@@ -441,9 +463,10 @@ def main():
             print(table_df)
 
         elif option == 2:
-            accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
-            start_year, end_year, selected_types = get_plot_time_and_types(crash_years, severity_types)
-            years, counts_lists = prepare_lists_for_plot(accumulated_all_years, selected_types, start_year, end_year)
+            #accumulated_all_years = accumulate_year_severity(clean_data, crash_years, severity_types)
+            table_df = generate_crash_table_by_year(cleaned_df)
+            start_year, end_year, selected_types = get_plot_time_and_types(crash_years, SEVERITY_ORDER)
+            years, counts_lists = prepare_lists_from_df(table_df, selected_types, start_year, end_year)
             plot_trends_over_time (years, selected_types, counts_lists)
 
         elif option == 3:
