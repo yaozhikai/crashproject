@@ -19,25 +19,31 @@ the following parts of the current code will be considered for refactoring using
 
 1. Data Cleaning (prepare_clean_data):
    - Replace tuple iteration with DataFrame filtering and a processed 'effectiveSpeed' column.
+   - Done!
 
 2. Accumulation (accumulate_year_severity, transform_to_table):
    - Use DataFrame operations such as groupby and unstack to simplify aggregation.
+   - Done!
 
 3. Printing Reports:
    - Replace nested loops with formatted DataFrame output 
      (to be verified: is the DataFrame already structured, ready for print?).
+    - Done!
 
 4. Single-Year Report (print_crash_severity_report):
    - Apply filters directly on the DataFrame for cleaner logic.
+   - Done!
 
 5. Plot Preparation:
    - Similar to (3) and (4), use filtered DataFrame slices to generate x and y values for plotting.
+   - Done!
 
 Other improvements to be considered:
-- Correlation analysis on additional factors such as weather 
-  to examine their influence on accident severity.
-
-- New dataset still not decided.
+- Inital plan to incooperate a long weekend dataset to study impact of long weekend, however original data has no excat date
+after review
+- CAS dataset includes region data, which can be incooperate with NZ Stat council region map data. Consider to use this based
+on new lib (folium? plotly?) study still pending
+- Add new options? for weather and region? add these filters on map/dashboard?
 """
 
 import pandas as pd
