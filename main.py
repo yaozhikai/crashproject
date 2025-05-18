@@ -51,6 +51,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import folium
 import geopandas as gpd
+from clean_data import load_and_clean
+
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
@@ -80,6 +82,7 @@ def prepare_clean_df (df):
     cleaned_df["effectiveSpeed"] = effective_speed #insert new column for effective speed
     #return cleaned_df.drop(columns=["speedLimit", "temporarySpeedLimit"])
     return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region"]]
+pass
 
 def filter_effective_speed_series(df):
     """Filter and return a series of effective speed limits by prioritising temporary limits.
@@ -96,6 +99,7 @@ def filter_effective_speed_series(df):
     effective_speed = processed[(processed.notna()) &
                             (processed % 10 == 0)]
     return effective_speed.astype('Int64') #float in raw data, due to Nan
+pass
 
 def extract_valid_values(df, column_name):
     """
@@ -151,6 +155,7 @@ def load_raw_dataframe(filename, columns, dtypes, index_col = None):
     DF contains all selected colms with specified data type.
     """
     return pd.read_csv(filename, usecols=columns, dtype=dtypes, index_col=index_col)
+pass
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
@@ -339,6 +344,7 @@ def main():
     """
 
     #raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
+    """
     raw_data_df = load_raw_dataframe(
     DATA_FILE,
     columns=["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit", "weatherA", "region"],
@@ -354,14 +360,16 @@ def main():
     ) #also include objected ID as unique identifier if pd.join is needed in future
       
     cleaned_df = prepare_clean_df(raw_data_df)
+    """
+    cleaned_df = load_and_clean() #call from clean_data.py
     crash_years = extract_valid_values(cleaned_df, column_name='crashYear') 
     speed_limits = extract_valid_values(cleaned_df, column_name='effectiveSpeed') 
-
+    
     menu_options = [
         "Crash Severity Report (single year and single speed limit)",
         "Crash Severity Report (All years)",
         "Crash Reports Over Time Graph",
-        "Testing for weather graph"
+        "Testing for weather graph",
         "Exit"
     ]
 
