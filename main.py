@@ -324,12 +324,14 @@ def main():
     #raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
     raw_data_df = load_raw_dataframe(
     DATA_FILE,
-    columns=["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"],
+    columns=["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit", "weatherA", "region"],
     dtypes={
         "crashYear": "int16",
         "speedLimit": "float32",
         "temporarySpeedLimit": "float32",
-        "crashSeverity": "category"
+        "crashSeverity": "category",
+        "weatherA": "category",
+        "region": "category"
     },
     index_col="OBJECTID"
     ) #also include objected ID as unique identifier if pd.join is needed in future
