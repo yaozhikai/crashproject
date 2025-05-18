@@ -49,6 +49,8 @@ on new lib (folium? plotly?) study still pending
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import folium
+import geopandas as gpd
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 CONDITION = "fine"
@@ -64,7 +66,7 @@ def prepare_clean_df (df):
     1. Call filter function
     2. Filter by index for the rows which are valid in filter
     3. Inserts a new column 'effectiveSpeed' into the cleaned DataFrame.
-    4. Create a new cleaned df
+    4. Create a new cleaned df (adding weatherA and region for new features)
 
     Parameters:
         df (raw df)
@@ -76,7 +78,8 @@ def prepare_clean_df (df):
     effective_speed = filter_effective_speed_series(df)
     cleaned_df = df.loc[effective_speed.index].copy() #create a new copy, include all rows which index matches with effectiveSpeed 
     cleaned_df["effectiveSpeed"] = effective_speed #insert new column for effective speed
-    return cleaned_df.drop(columns=["speedLimit", "temporarySpeedLimit"])
+    #return cleaned_df.drop(columns=["speedLimit", "temporarySpeedLimit"])
+    return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region"]]
 
 def filter_effective_speed_series(df):
     """Filter and return a series of effective speed limits by prioritising temporary limits.
