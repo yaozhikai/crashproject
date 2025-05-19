@@ -13,9 +13,25 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
     proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
     return proportion_df
 
-df = load_and_clean()
+def run_dashboard():
+    """a function to generate dashboard for users.
+    The dashboard shows the proportion of severity types under different weatherA conditons
+    """
+    df = load_and_clean()
+    proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
 
-# test calculation
-proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
+    st.title("Crash Severity Proportion Report")
+    st.subheader("Porportion Table")
+    st.dataframe(proportion_table.style.format("{:.1%}"))
 
-print(proportion_table)
+    st.subheader("Stacked Bar Chart")
+    fig, axes = plt.subplots(figsize = (10,6))
+    proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
+    axes.set_xlabel("Weather Conditon")
+    axes.set_ylabel("Proportion")
+    axes.set_title('Crash Severity Proportion')
+    axes.legend(title = 'Crash Severity')
+    st.pyplot(fig)
+
+if __name__ == "__main__":
+    run_dashboard()
