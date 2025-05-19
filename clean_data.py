@@ -15,14 +15,15 @@ def load_raw_dataframe(filename=DATA_FILE):
     Returns:
     - Raw DataFrame with specified columns and types, indexed by OBJECTID.
     """
-    columns = ["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit", "weatherA", "region"]
+    columns = ["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit", "weatherA", "region","urban"]
     dtypes = {
         "crashYear": "int16",
         "speedLimit": "float32",
         "temporarySpeedLimit": "float32",
         "crashSeverity": "category",
         "weatherA": "category",
-        "region": "category"
+        "region": "category",
+        "urban": "category"
     }
     return pd.read_csv(filename, usecols=columns, dtype=dtypes, index_col="OBJECTID")
 
@@ -49,7 +50,7 @@ def prepare_clean_df(df):
     effective_speed = filter_effective_speed_series(df)
     cleaned_df = df.loc[effective_speed.index].copy() #generate new df, avioding only generates a view on original df
     cleaned_df["effectiveSpeed"] = effective_speed #add new column and relate data
-    return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region"]]
+    return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region", "urban"]]
 
 def load_and_clean():
     """

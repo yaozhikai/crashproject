@@ -13,10 +13,10 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
     proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
     return proportion_df
 
-def get_speed_filter(df):
-    """a subfunction for select speed for another dimension to study weather impact"""
-    speeds = sorted(df['effectiveSpeed'].dropna().unique())
-    selected = st.sidebar.multiselect("Select Speed Limit(s)", speeds, default=speeds)
+def get_urban_filter(df):
+    """a subfunction for select 'urban' for another dimension to study weather impact"""
+    urbans = sorted(df['urban'].dropna().unique())
+    selected = st.sidebar.multiselect("Select urban status", urbans, default=urbans)
     return selected
 
 def run_dashboard():
@@ -24,8 +24,8 @@ def run_dashboard():
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
-    selected_speeds = get_speed_filter(df) #use sub-function for filter application
-    df = df[df["effectiveSpeed"].isin(selected_speeds)] #slice
+    urban_types = get_urban_filter(df) #use sub-function for filter application
+    df = df[df["urban"].isin(urban_types)] #slice
 
     proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
     proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
@@ -45,3 +45,5 @@ def run_dashboard():
 
 if __name__ == "__main__":
     run_dashboard()
+
+#streamlit run dashboard_app.py
