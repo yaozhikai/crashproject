@@ -13,11 +13,19 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
     proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
     return proportion_df
 
+def get_speed_filter(df):
+    """a subfunction for select speed for another dimension to study weather impact"""
+    speeds = sorted(df['effectiveSpeed'].dropna().unique())
+    selected = st.sidebar.multiselect("Select Speed Limit(s)", speeds, default=speeds)
+    return selected
+
 def run_dashboard():
     """a function to generate dashboard for users.
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
+    selected_speeds = get_speed_filter(df) #use sub-function for filter application
+    df = df[df["effectiveSpeed"].isin(selected_speeds)] #slice
 
     proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
     proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
