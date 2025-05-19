@@ -18,7 +18,9 @@ def run_dashboard():
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
+
     proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
+    proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
 
     st.title("Crash Severity Proportion Report")
     st.subheader("Porportion Table")
