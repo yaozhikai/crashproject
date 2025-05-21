@@ -1,6 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-
+from map_plotting import generate_region_crash_map_by_year
 from clean_data import load_and_clean
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
@@ -40,7 +40,7 @@ def run_dashboard():
         st.subheader("Stacked Bar Chart")
         fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under propoertion table
         proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
-        axes.set_xlabel("Weather Conditon")
+        axes.set_xlabel("Urban Status")
         axes.set_ylabel("Proportion")
         axes.set_title('Crash Severity Proportion')
         axes.legend(title = 'Crash Severity')
@@ -48,6 +48,10 @@ def run_dashboard():
 
     with tab2:
         st.title("Annual Crash Amounts by Region")
+        selected_year = st.slider("Select year for crash map", min_value=2000, max_value=2024, value=2000)
+        st.caption(f"Displaying crash counts for year {selected_year}")
+        fig = generate_region_crash_map_by_year(df, selected_year, cmap="OrRd")
+        st.pyplot(fig)
 
 if __name__ == "__main__":
     run_dashboard()
