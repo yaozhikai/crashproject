@@ -24,24 +24,30 @@ def run_dashboard():
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
-    urban_types = get_urban_filter(df) #use sub-function for filter application
-    df = df[df["urban"].isin(urban_types)] #slice
+    tab1, tab2 = st.tabs(["Severity Proportion Research upon Urban Status", "Annual Crash Amounts by Region"])
 
-    proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
-    proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
+    with tab1:
+        urban_types = get_urban_filter(df) #use sub-function for filter application
+        df = df[df["urban"].isin(urban_types)] #slice
 
-    st.title("Crash Severity Proportion Report")
-    st.subheader("Porportion Table")
-    st.dataframe(proportion_table.style.format("{:.1%}")) #print the proportion table
+        proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
+        proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
 
-    st.subheader("Stacked Bar Chart")
-    fig, axes = plt.subplots(figsize = (10,6))
-    proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
-    axes.set_xlabel("Weather Conditon")
-    axes.set_ylabel("Proportion")
-    axes.set_title('Crash Severity Proportion')
-    axes.legend(title = 'Crash Severity')
-    st.pyplot(fig)
+        st.title("Severity Proportion Research upon Urban Status")
+        st.subheader("Porportion Table")
+        st.dataframe(proportion_table.style.format("{:.1%}")) #print the proportion table
+
+        st.subheader("Stacked Bar Chart")
+        fig, axes = plt.subplots(figsize = (10,6))
+        proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
+        axes.set_xlabel("Weather Conditon")
+        axes.set_ylabel("Proportion")
+        axes.set_title('Crash Severity Proportion')
+        axes.legend(title = 'Crash Severity')
+        st.pyplot(fig)
+
+    with tab2:
+        st.title("Annual Crash Amounts by Region")
 
 if __name__ == "__main__":
     run_dashboard()
