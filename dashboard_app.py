@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 from map_plotting import generate_region_crash_map_by_year
+from map_plotting import prepare_map_data #generic function, use to slice df by region and year
 from clean_data import load_and_clean
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
@@ -16,7 +17,8 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
 def get_weather_filter(df):
     """a subfunction for select 'urban' for another dimension to study weather impact"""
     weathers = sorted(df[df['weatherA'].notna() & (df['weatherA'] != 'Null')]['weatherA'].unique())
-    selected = st.sidebar.multiselect("Select weather status", weathers, default=weathers)
+    selected = st.sidebar.multiselect("Select weather status", weathers, default=weathers) #as tested, side bar is tab-wised, cannot delete from other tabs.
+    # the filter still works in new tab!!!
     return selected
 
 def run_dashboard():
@@ -52,6 +54,14 @@ def run_dashboard():
         st.caption(f"Displaying crash counts for year {selected_year}")
         fig = generate_region_crash_map_by_year(df, selected_year, cmap="OrRd")
         st.pyplot(fig)
+
+        # generate and display crash table sorted by region, use as legend
+        region_df = prepare_map_data(df, selected_year)
+        region_df_sorted = region_df.sort_values(by="region")  # sort region name alphabetically in the 'legend'
+        st.subheader("Crash Count by Region")
+        st.dataframe(region_df_sorted.rename(columns={"region": "Region", "CrashCount": "Crash Count"}))
+
+
 
 if __name__ == "__main__":
     run_dashboard()
