@@ -23,7 +23,7 @@ def prepare_map_data(df, year):
     grouped = filtered_df.groupby('region').size().reset_index(name = 'CrashCount') #use group to accumulate by region name and set column name
     return grouped
 
-def merge_shp_with_map_data (shp_path, crash_map_data, region_key_shp="REGC2025_1", region_key_data="region", count_col="CrashCount"):
+def merge_shp_with_map_data (crash_map_data, shp_path=MAP_FILE, region_key_shp="REGC2025_1", region_key_data="region", count_col="CrashCount"):
     """Merge map shp data with prepared data for map
     Parameters:
     -introduce shp file
@@ -40,14 +40,27 @@ def merge_shp_with_map_data (shp_path, crash_map_data, region_key_shp="REGC2025_
     merged[count_col] = merged[count_col].fillna(0).astype(int)
     return merged
 
-#test
-year = 2021
-shapefile_path = MAP_FILE
+pass
 
-df = load_and_clean()
+import geopandas as gpd
+import matplotlib.pyplot as plt
 
-map_data = prepare_map_data(df, year)
+import geopandas as gpd
+import matplotlib.pyplot as plt
 
-merged_gdf = merge_shp_with_map_data(shapefile_path, map_data)
+def draw_nz_map(shapefile_path=MAP_FILE):
+    """
+    Draw a clean static outline map of New Zealand regions using shapefile.
+    No labels or index are shown—just geometry for visual inspection or base map use.
 
-print(merged_gdf[["REGC2025_1", "CrashCount"]].head())
+    Parameters:
+        shapefile_path (str): Path to the shapefile (.shp)
+    """
+    gdf = gpd.read_file(shapefile_path)
+    gdf.plot(color='white', edgecolor='black')
+    plt.axis("off")
+    plt.tight_layout()
+    plt.show()
+
+
+draw_nz_map(shapefile_path=MAP_FILE)
