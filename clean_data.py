@@ -48,7 +48,8 @@ def prepare_clean_df(df):
     - Cleaned DataFrame with crashYear, crashSeverity, effectiveSpeed, weatherA, region
     """
     effective_speed = filter_effective_speed_series(df)
-    cleaned_df = df.loc[effective_speed.index].copy() #generate new df, avioding only generates a view on original df
+    cleaned_df = df.loc[effective_speed.index].copy() #generate new df, avioding only generates a view on original df, align row with index which is ObjectID
+    #review note: slice of df didn't change index value
     cleaned_df["effectiveSpeed"] = effective_speed #add new column and relate data
     return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region", "urban"]]
 

@@ -8,15 +8,15 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
     """
     Group by weather and severity, then calculate and generate percentage table with 'div' method.
     """
-    grouped = df.groupby(['weatherA', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
+    grouped = df.groupby(['urban', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
     grouped = grouped.reindex(columns=SEVERITY_ORDER, fill_value=0)
     proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
     return proportion_df
 
-def get_urban_filter(df):
+def get_weather_filter(df):
     """a subfunction for select 'urban' for another dimension to study weather impact"""
-    urbans = sorted(df['urban'].dropna().unique())
-    selected = st.sidebar.multiselect("Select urban status", urbans, default=urbans)
+    weathers = sorted(df[df['weatherA'].notna() & (df['weatherA'] != 'Null')]['weatherA'].unique())
+    selected = st.sidebar.multiselect("Select weather status", weathers, default=weathers)
     return selected
 
 def run_dashboard():
@@ -24,21 +24,21 @@ def run_dashboard():
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
-    tab1, tab2 = st.tabs(["Severity Proportion Research upon Urban Status", "Annual Crash Amounts by Region"])
+    tab1, tab2 = st.tabs(["Impact of Weather on Crash Severity by Area Type", "Annual Crash Amounts by Region"])
 
     with tab1:
-        urban_types = get_urban_filter(df) #use sub-function for filter application
-        df = df[df["urban"].isin(urban_types)] #slice
+        urban_types = get_weather_filter(df) #use sub-function for filter application
+        df = df[df["weatherA"].isin(urban_types)] #slice
 
         proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
         proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
 
-        st.title("Severity Proportion Research upon Urban Status")
+        st.title("Impact of Weather on Crash Severity by Area Type")
         st.subheader("Porportion Table")
         st.dataframe(proportion_table.style.format("{:.1%}")) #print the proportion table
 
         st.subheader("Stacked Bar Chart")
-        fig, axes = plt.subplots(figsize = (10,6))
+        fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under propoertion table
         proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
         axes.set_xlabel("Weather Conditon")
         axes.set_ylabel("Proportion")
