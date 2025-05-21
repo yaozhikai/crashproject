@@ -32,7 +32,7 @@ def run_dashboard():
 
     st.title("Crash Severity Proportion Report")
     st.subheader("Porportion Table")
-    st.dataframe(proportion_table.style.format("{:.1%}"))
+    st.dataframe(proportion_table.style.format("{:.1%}")) #print the proportion table
 
     st.subheader("Stacked Bar Chart")
     fig, axes = plt.subplots(figsize = (10,6))
