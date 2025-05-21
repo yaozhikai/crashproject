@@ -23,11 +23,31 @@ def prepare_map_data(df, year):
     grouped = filtered_df.groupby('region').size().reset_index(name = 'CrashCount') #use group to accumulate by region name and set column name
     return grouped
 
+def merge_shp_with_map_data (shp_path, crash_map_data, region_key_shp="REGC2025_1", region_key_data="region", count_col="CrashCount"):
+    """Merge map shp data with prepared data for map
+    Parameters:
+    -introduce shp file
+    -prepared crash_map_data
+    -join key from shp file
+    -join key from crash map data
+    -column name of crash count data
+
+    Returns:
+    gpd dataframe merged with crash count, need to filled 0 if no data for the region record.
+    """
+    gpd_df = gpd.read_file(shp_path)
+    merged = gpd_df.merge(crash_map_data, left_on=region_key_shp, right_on=region_key_data, how="left")
+    merged[count_col] = merged[count_col].fillna(0).astype(int)
+    return merged
+
+#test
+year = 2021
+shapefile_path = MAP_FILE
+
 df = load_and_clean()
 
-year = 2004
+map_data = prepare_map_data(df, year)
 
-map_df = prepare_map_data(df, year)
+merged_gdf = merge_shp_with_map_data(shapefile_path, map_data)
 
-print("Crash Count by Region in", year)
-print(map_df)
+print(merged_gdf[["REGC2025_1", "CrashCount"]].head())
