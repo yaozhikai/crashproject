@@ -49,7 +49,6 @@ on new lib (folium? plotly?) study still pending
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import folium
 import geopandas as gpd
 from clean_data import load_and_clean
 
