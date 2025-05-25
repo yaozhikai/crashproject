@@ -21,8 +21,10 @@ def prepare_map_data(df, year):
     """
     filtered_df = df[df['crashYear'] == year] #for later use as filter in streamlit? Choice: == one year or isin year list?
     grouped = filtered_df.groupby('region', observed= False).size().reset_index(name = 'CrashCount') #use group to accumulate by region name and set column name
-    return grouped
+    return grouped 
 
+#note: defalut arguments can be automatically passed to main function
+#note: crash_map_data is not good naming, caused confusion when revisiting the sub-function
 def merge_shp_with_map_data (crash_map_data, shp_path=MAP_FILE, region_key_shp="REGC2025_1", region_key_data="region", count_col="CrashCount"):
     """Merge map shp data with prepared data for map
     Parameters:
