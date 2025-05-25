@@ -58,48 +58,6 @@ CONDITION = "fine"
 # Define fixed severity order for consistent report form
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
-def prepare_clean_df (df):
-    """
-    Prepare a cleaned DataFrame by using filters:
-    - effective speed limits , insert a new column 'effectiveSpeed'.
-
-    steps:
-    1. Call filter function
-    2. Filter by index for the rows which are valid in filter
-    3. Inserts a new column 'effectiveSpeed' into the cleaned DataFrame.
-    4. Create a new cleaned df (adding weatherA and region for new features)
-
-    Parameters:
-        df (raw df)
-        -other filteres will be extended
-
-    Returns:
-        new cleaned with effectiveSpeed, index is OBJECTID
-        """
-    effective_speed = filter_effective_speed_series(df)
-    cleaned_df = df.loc[effective_speed.index].copy() #create a new copy, include all rows which index matches with effectiveSpeed 
-    cleaned_df["effectiveSpeed"] = effective_speed #insert new column for effective speed
-    #return cleaned_df.drop(columns=["speedLimit", "temporarySpeedLimit"])
-    return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region"]]
-pass
-
-def filter_effective_speed_series(df):
-    """Filter and return a series of effective speed limits by prioritising temporary limits.
-
-    - Prioritises 'temporarySpeedLimit' over 'speedLimit',
-    - Filters out missing values and those not divisible by 10,
-    - Returns a Series of valid effective speeds with integer type ('Int64').
-
-    Parameters:
-        df : Input raw dataframe which has 'temporarySpeedLimit' and 'speedLimit' columns.
-    Returns:
-        pd.Series: A Series containing valid effective speeds, indexed as in the input DataFrame."""
-    processed = df['temporarySpeedLimit'].combine_first(df['speedLimit'])
-    effective_speed = processed[(processed.notna()) &
-                            (processed % 10 == 0)]
-    return effective_speed.astype('Int64') #float in raw data, due to Nan
-pass
-
 def extract_valid_values(df, column_name):
     """
     A generic function to extract sorted unique values from df and 
@@ -115,46 +73,6 @@ def extract_valid_values(df, column_name):
         cleaned_values.append(int(value))
     cleaned_values.sort()
     return cleaned_values
-
-def get_effective_speed(speed_limit, temporary_speed):
-    """get effective speed limit by prioritising temporarySpeedLimit if available and valid."""
-    # check if temporary speed exists and is valid as multiples of 10
-    if temporary_speed == temporary_speed and temporary_speed % 10 == 0:
-        return int(temporary_speed)
-    # check if normal speed limit exists and is valid
-    elif speed_limit == speed_limit and speed_limit % 10 == 0:
-        return int(speed_limit)
-    else:
-        return None  # Both are missing or invalid
-pass
-
-def read_csv_data(filename: str, columns: list[str]) -> list[tuple]:
-    """
-    IMPORTANT NOTE:
-      When completing Part one and Part Two of the project you do NOT need to understand how this function works.
-    Reads in data from a list of csv files.
-    Returns columns of data requested, in the order given in
-    """
-    df = pd.read_csv(filename)
-    desired_columns = df[columns]
-    return list(desired_columns.itertuples(index=False, name=None))
-pass
-
-def load_raw_dataframe(filename, columns, dtypes, index_col = None):
-    """This function will replace original read_csv function
-    It will load raw crash data from csv file with given columns and data types.
-    Parameters:
-    - filename
-    - required columns (list of cols)
-    - dtypes (tbc, still researching, flexible for future inclusion of date and coordinates?
-    speed use float as they contains NaN
-    - index (use OBJECTID as unique id for downstream processing)
-    )
-    Returns:
-    DF contains all selected colms with specified data type.
-    """
-    return pd.read_csv(filename, usecols=columns, dtype=dtypes, index_col=index_col)
-pass
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
@@ -340,25 +258,6 @@ def main():
     2. Generate a cleaned list of tuples containing (crashYear, crashSeverity, effectiveSpeedLimit).
     3. Extract legal year and speed limit from clean_data
     4. Perform reporting and visualization functions based on the cleaned data.
-    """
-
-    #raw_data = read_csv_data(DATA_FILE, ["crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit"])
-    """
-    raw_data_df = load_raw_dataframe(
-    DATA_FILE,
-    columns=["OBJECTID", "crashYear", "speedLimit", "crashSeverity", "temporarySpeedLimit", "weatherA", "region"],
-    dtypes={
-        "crashYear": "int16",
-        "speedLimit": "float32",
-        "temporarySpeedLimit": "float32",
-        "crashSeverity": "category",
-        "weatherA": "category",
-        "region": "category"
-    },
-    index_col="OBJECTID"
-    ) #also include objected ID as unique identifier if pd.join is needed in future
-      
-    cleaned_df = prepare_clean_df(raw_data_df)
     """
     cleaned_df = load_and_clean() #call from clean_data.py
     crash_years = extract_valid_values(cleaned_df, column_name='crashYear') 
