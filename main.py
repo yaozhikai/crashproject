@@ -368,7 +368,7 @@ def main():
         "Crash Severity Report (single year and single speed limit)",
         "Crash Severity Report (All years)",
         "Crash Reports Over Time Graph",
-        "Testing for weather graph",
+        "Accident Insights Dashboard",
         "Exit"
     ]
 
@@ -395,7 +395,13 @@ def main():
             plot_trends_over_time (years, selected_types, counts_lists)
 
         elif option == 3:
-            plot_weather_vs_severity(cleaned_df)
+            import subprocess 
+            #note: streamlit is web based app, cannot be called directly within main
+            #note: subprocess module is used to run external app
+            #use Popen method to run app without blocking main, 'run' method will block main
+            subprocess.Popen(["streamlit", "run", "dashboard_app.py"]) 
+            #arguments note: streamlit- call this app, run- start python script, python script name to be called
+            print("Streamlit dashboard has been launched in the browser.")
 
         elif option == 4:
             print("Bye")
