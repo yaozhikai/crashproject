@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from adjustText import adjust_text
 from clean_data import load_and_clean
 
-#MAP_FILE = "data/regional-council-2025.shp"
-MAP_FILE = "data/regional-council-2025-clipped.shp"
+MAP_FILE = "data/regional-council-2025.shp"
+#MAP_FILE = "data/regional-council-2025-clipped.shp"
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
 Auckland_name_mapping = {'Auckland Region': 'Auckland'} #solve the Auckland name anomaly
