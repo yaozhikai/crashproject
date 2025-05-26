@@ -56,7 +56,7 @@ def run_dashboard():
     The dashboard shows the proportion of severity types under different weatherA conditons
     """
     df = load_and_clean()
-    tab1, tab2 = st.tabs(["Impact of Weather on Crash Severity by Area Type", "Annual Crash Amounts by Region"])
+    tab1, tab2 = st.tabs(["Crash Count Visual Report", "Annual Crash Amounts by Region"])
 
     with tab1:
         weather_types = get_weather_filter(df) #use sub-function for filter application
