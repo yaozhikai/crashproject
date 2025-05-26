@@ -232,23 +232,6 @@ def plot_trends_over_time (years, selected_types, counts_lists):
     axes.grid(True)
     plt.show()
 
-def plot_weather_vs_severity(cleaned_df):
-    """
-    Plot the distribution of crash severity under different weather conditions.
-    """
-    grouped_df = cleaned_df.groupby(['weatherA', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
-    grouped_df = grouped_df.reindex(columns=SEVERITY_ORDER, fill_value=0)
-    # Plot as stacked bar chart
-    axes = grouped_df.plot(kind='bar', stacked=True, figsize=(12, 6))
-    plt.title("Crash Severity by Weather Condition")
-    plt.xlabel("Weather Condition")
-    plt.ylabel("Crash Count")
-    plt.xticks(rotation=45)
-    plt.legend(title="Crash Severity")
-    plt.tight_layout()
-    plt.grid(axis='y')
-    plt.show()
-
 def main():
     """Small application that presents tables and graphs based on crash data
     Process steps:
