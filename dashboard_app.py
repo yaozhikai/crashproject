@@ -26,6 +26,15 @@ def get_weather_filter(df):
     # the filter still works in new tab!!!
     return selected
 
+def get_dashboard_filter(df, column_name, label):
+    """
+    General filter function for any categorical column. combine speed and severity filter
+    """
+    unique_values = sorted(df[column_name].dropna().unique())
+    selected = st.sidebar.multiselect(label, unique_values, default=unique_values)
+    return selected
+
+
 def get_speed_for_speed(df):
     """a subfunction for select speed limit, didn't reuse weather filter as for weather orther filter logic is needed and tested"""
     speeds = sorted(df['effectiveSpeed'].unique())
@@ -48,10 +57,15 @@ def run_dashboard():
     with tab1:
         weather_types = get_weather_filter(df) #use sub-function for filter application
         df = df[df["weatherA"].isin(weather_types)] #slice
-        speed_types = get_speed_for_speed(df)
+        #speed_types = get_speed_for_speed(df)
+        #df = df[df["effectiveSpeed"].isin(speed_types)]
+        #selected_severities = get_severity_filter(df)
+        #df = df[df['crashSeverity'].isin(selected_severities)] 
+        speed_types = get_dashboard_filter(df, 'effectiveSpeed', "Select speed limit")
         df = df[df["effectiveSpeed"].isin(speed_types)]
-        selected_severities = get_severity_filter(df)
-        df = df[df['crashSeverity'].isin(selected_severities)] 
+        selected_severities = get_dashboard_filter(df, 'crashSeverity', "Select Crash Severity Types")
+        df = df[df['crashSeverity'].isin(selected_severities)]
+
 
         crash_count_table = calculate_count_table(df, SEVERITY_ORDER)
 
