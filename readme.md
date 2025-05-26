@@ -33,11 +33,18 @@ Fill in this section, list any libraries that this program requires to run.
 - Data (Waka Kotahi) CC BY 4.0
 - [Pandas](https://pandas.pydata.org/)
 - [Matplotlib](https://matplotlib.org/)
+- [Streamlit](https://docs.streamlit.io/)
+- [GeoPandas](https://geopandas.org/)
 
 ## How to Run
 To execute this program run following command from a terminal:
 
 `python3 main.py`
+
+For the Streamlit dashboard, it can also be executed through the following command:
+
+`streamlit run dashboard_app.py`
+
 
 ## Future Development
 In addition to the required features, I plan to add extra data (e.g., weatherA) from the given dataset and include visualizations to improve the project.
@@ -58,3 +65,5 @@ The graph can help users review and compare if there are any patterns in an intu
 ## Citations
 
 - Waka Kotahi. _Crash Analysis System (CAS) data_ [Review of  Crash Analysis System (CAS) data]. Retrieved January 13, 2025, from https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc_0/explore
+Streamlit https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/
+https://geopandas.org/en/stable/getting_started/introduction.html

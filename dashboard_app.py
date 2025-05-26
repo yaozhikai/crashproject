@@ -15,11 +15,22 @@ def calculate_proportional_table(df, SEVERITY_ORDER):
     return proportion_df
 
 def get_weather_filter(df):
-    """a subfunction for select 'urban' for another dimension to study weather impact"""
-    weathers = sorted(df[df['weatherA'].notna() & (df['weatherA'] != 'Null')]['weatherA'].unique())
+    """a subfunction for select 'weatherA' for another dimension to study weather impact"""
+    filtered_weatherA = df.loc[
+    df['weatherA'].notna() & (df['weatherA'] != 'Null'),
+    'weatherA']
+    weathers = sorted(filtered_weatherA.unique())
     selected = st.sidebar.multiselect("Select weather status", weathers, default=weathers) #as tested, side bar is tab-wised, cannot delete from other tabs.
     # the filter still works in new tab!!!
     return selected
+
+def get_speed_for_speed(df):
+    """a subfunction for select speed limit, didn't reuse weather filter as for weather orther filter logic is needed and tested"""
+    speeds = sorted(df['effectiveSpeed'].unique())
+    selected = st.sidebar.multiselect("Select speed limit", speeds, default=speeds)
+    return selected
+                    
+
 
 def run_dashboard():
     """a function to generate dashboard for users.
@@ -29,8 +40,10 @@ def run_dashboard():
     tab1, tab2 = st.tabs(["Impact of Weather on Crash Severity by Area Type", "Annual Crash Amounts by Region"])
 
     with tab1:
-        urban_types = get_weather_filter(df) #use sub-function for filter application
-        df = df[df["weatherA"].isin(urban_types)] #slice
+        weather_types = get_weather_filter(df) #use sub-function for filter application
+        df = df[df["weatherA"].isin(weather_types)] #slice
+        speed_types = get_speed_for_speed(df)
+        df = df[df["effectiveSpeed"].isin(speed_types)] 
 
         proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
         proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
