@@ -56,7 +56,7 @@ CONDITION = "fine"
 # Define fixed severity order for consistent report form
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
-def extract_valid_values(df, column_name):
+def extract_valid_values(cleaned_df, column_name):
     """
     A generic function to extract sorted unique values from df and 
     required column.
@@ -64,13 +64,13 @@ def extract_valid_values(df, column_name):
     Parameters: df (cleaed df), column name
 
     Returns: list of sorted unique values    
+
+    Review Note: used this to extract years and speedlimit containted in df
+    Refactored as previous coding based on unique value was redundant
+
     """
-    unique_values = df[column_name].dropna().unique()
-    cleaned_values = []
-    for value in unique_values:
-        cleaned_values.append(int(value))
-    cleaned_values.sort()
-    return cleaned_values
+    return sorted(cleaned_df[column_name].dropna().unique())
+
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
@@ -128,7 +128,7 @@ def get_plot_severity_types(severity_types):
                     break
                 elif response == 'n':
                     break
-                else:
+                else: #if no y or n inputed, return the loop until disered y or n inputed
                     print("Invalid input. Please enter 'y' or 'n'.")
 
         if len(selected) > 0:
@@ -298,6 +298,7 @@ def main():
             #use Popen method to run app without blocking main, 'run' method will block main
             subprocess.Popen(["streamlit", "run", "dashboard_app.py"]) 
             #arguments note: streamlit- call this app, run- start python script, python script name to be called
+            print("\n")
             print("Streamlit dashboard has been launched in the browser.")
 
         elif option == 4:
