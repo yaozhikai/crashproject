@@ -25,6 +25,7 @@ def load_raw_dataframe(filename=DATA_FILE):
         "region": "category",
         "urban": "category"
     }
+    #review note: select columns from oringal data and set types
     return pd.read_csv(filename, usecols=columns, dtype=dtypes, index_col="OBJECTID")
 
 def filter_effective_speed_series(df):
@@ -39,11 +40,13 @@ def filter_effective_speed_series(df):
     Returns:
         pd.Series of valid speeds (multiples of 10), with original index preserved.
     """
-    processed = df['temporarySpeedLimit'].combine_first(df['speedLimit'])
-    effective_speed = processed[(processed.notna()) & (processed % 10 == 0)]
+    processed = df['temporarySpeedLimit'].combine_first(df['speedLimit']) 
+    #first, prioritize temporary speed limit
+    effective_speed = processed[(processed.notna()) & (processed % 10 == 0)] 
+    #then, remove invalid speeds (nan, illegal value like 5,11)
     return effective_speed.astype('Int64') #float in raw data, due to Nan
 
-def prepare_clean_df(df):
+def prepare_clean_df(raw_df):
     """
     Prepare a cleaned DataFrame by using filters:
     - effective speed limits , insert a new column 'effectiveSpeed'.
@@ -61,15 +64,17 @@ def prepare_clean_df(df):
     Returns:
         new cleaned with effectiveSpeed, index is OBJECTID
     """
-    effective_speed = filter_effective_speed_series(df)
-    cleaned_df = df.loc[effective_speed.index].copy() #generate new df, avioding only generates a view on original df, align row with index which is ObjectID
-    #review note: slice of df didn't change index value
+    effective_speed = filter_effective_speed_series(raw_df)
+    cleaned_df = raw_df.loc[effective_speed.index].copy() 
+    #generate new df, avioding only generates a view on original df, align row with index which is ObjectID
+    #review note: slice of df didn't change index value, slice all rows with effective speed.
     cleaned_df["effectiveSpeed"] = effective_speed #add new column and relate data
     return cleaned_df[["crashYear", "crashSeverity", "effectiveSpeed", "weatherA", "region", "urban"]]
 
 def load_and_clean():
     """
     prepare for future use in main() features
+    return a cleaned df ready for use later
     """
     raw_df = load_raw_dataframe()
     return prepare_clean_df(raw_df)
