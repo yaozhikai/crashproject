@@ -30,7 +30,11 @@ def get_speed_for_speed(df):
     selected = st.sidebar.multiselect("Select speed limit", speeds, default=speeds)
     return selected
                     
-
+def get_severity_filter(df):
+    """Filter for selecting crash severity types"""
+    severity_types = sorted(df['crashSeverity'].unique())
+    selected = st.sidebar.multiselect("Select Crash Severity Types", severity_types, default=severity_types)
+    return selected
 
 def run_dashboard():
     """a function to generate dashboard for users.
@@ -43,7 +47,9 @@ def run_dashboard():
         weather_types = get_weather_filter(df) #use sub-function for filter application
         df = df[df["weatherA"].isin(weather_types)] #slice
         speed_types = get_speed_for_speed(df)
-        df = df[df["effectiveSpeed"].isin(speed_types)] 
+        df = df[df["effectiveSpeed"].isin(speed_types)]
+        selected_severities = get_severity_filter(df)
+        df = df[df['crashSeverity'].isin(selected_severities)] 
 
         proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
         proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
