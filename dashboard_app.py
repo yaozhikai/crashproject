@@ -5,14 +5,16 @@ from map_plotting import prepare_map_data #generic function, use to slice df by 
 from clean_data import load_and_clean
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
-def calculate_proportional_table(df, SEVERITY_ORDER):
+def calculate_count_table(df, SEVERITY_ORDER):
     """
     Group by weather and severity, then calculate and generate percentage table with 'div' method.
     """
-    grouped = df.groupby(['urban', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
+    grouped = df.groupby(['effectiveSpeed','crashSeverity'], observed=False).size().unstack(fill_value=0)
+
+    #grouped = df.groupby(['urban', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
     grouped = grouped.reindex(columns=SEVERITY_ORDER, fill_value=0)
-    proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
-    return proportion_df
+    #proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
+    return grouped #proportion_df
 
 def get_weather_filter(df):
     """a subfunction for select 'weatherA' for another dimension to study weather impact"""
@@ -51,19 +53,18 @@ def run_dashboard():
         selected_severities = get_severity_filter(df)
         df = df[df['crashSeverity'].isin(selected_severities)] 
 
-        proportion_table = calculate_proportional_table(df, SEVERITY_ORDER)
-        proportion_table = proportion_table[proportion_table.index != "Null"] #remove weatherA = Null row
+        crash_count_table = calculate_count_table(df, SEVERITY_ORDER)
 
-        st.title("Impact of Weather on Crash Severity by Area Type")
-        st.subheader("Porportion Table")
-        st.dataframe(proportion_table.style.format("{:.1%}")) #print the proportion table
+        st.title("Crash Count Visual Report")
+        st.subheader("Crash Count Table")
+        st.dataframe(crash_count_table) #print the crash count table
 
         st.subheader("Stacked Bar Chart")
-        fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under propoertion table
-        proportion_table.plot (kind = 'bar', stacked = True, ax = axes)
-        axes.set_xlabel("Urban Status")
-        axes.set_ylabel("Proportion")
-        axes.set_title('Crash Severity Proportion')
+        fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under crash count table
+        crash_count_table.plot (kind = 'bar', stacked = True, ax = axes)
+        axes.set_xlabel("Speed Limit")
+        axes.set_ylabel("Crash Counts")
+        axes.set_title('Crash Count Table')
         axes.legend(title = 'Crash Severity')
         st.pyplot(fig)
 
