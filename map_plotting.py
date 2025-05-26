@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from adjustText import adjust_text
 from clean_data import load_and_clean
 
-MAP_FILE = "data/regional-council-2025.shp"
+#MAP_FILE = "data/regional-council-2025.shp"
+MAP_FILE = "data/regional-council-2025-clipped.shp"
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
 Auckland_name_mapping = {'Auckland Region': 'Auckland'} #solve the Auckland name anomaly
@@ -112,9 +113,9 @@ def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
         #parameter: row name for region, horizontally align in center, font size and color
         texts.append(text)
 
-    adjust_text(texts, ax=axes, expand_text=(6, 6), expand_objects=(6, 6), 
+    adjust_text(texts, ax=axes, expand_text=(1.5, 1.5), expand_objects=(6, 6), 
                 arrowprops=dict(arrowstyle="-", color='grey', lw=0.5))
-    #parameters: object: texts list, axes, move distance, space between
+    #parameters: object: texts list, axes, max distance to center, space between
     #dict for linestype, color and line width
 
     return fig
