@@ -1,9 +1,8 @@
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
+from adjustText import adjust_text
 from clean_data import load_and_clean
-
-#修改auckland region, 修改buffer for map?， 忽略outside area，是否增加region index?
 
 MAP_FILE = "data/regional-council-2025.shp"
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
@@ -103,6 +102,21 @@ def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
     axes.set_title(f"Annual Crash Count by Region of {year}")
     axes.axis("off")
     plt.tight_layout() #auto adjusts the plot layout
+    
+    #use adjusttext to adjust the text locations
+    texts = [] #prepare list for text (region)
+    for idx, row in merged_gdf.iterrows(): #iterate over gdf for each row/region with geo data
+        centroid = row['geometry'].centroid #calculate center of region
+        text = axes.text(centroid.x, centroid.y, row['REGC2025_1'], 
+                         ha='center', fontsize=6, color='black') 
+        #parameter: row name for region, horizontally align in center, font size and color
+        texts.append(text)
+
+    adjust_text(texts, ax=axes, expand_text=(6, 6), expand_objects=(6, 6), 
+                arrowprops=dict(arrowstyle="-", color='grey', lw=0.5))
+    #parameters: object: texts list, axes, move distance, space between
+    #dict for linestype, color and line width
+
     return fig
 
 cleaned_df = load_and_clean()
