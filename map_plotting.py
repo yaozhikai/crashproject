@@ -3,8 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from clean_data import load_and_clean
 
+#修改auckland region, 修改buffer for map?， 忽略outside area，是否增加region index?
+
 MAP_FILE = "data/regional-council-2025.shp"
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
+
+Auckland_name_mapping = {'Auckland Region': 'Auckland'} #solve the Auckland name anomaly
 
 def get_region_crash_counts_for_join(df, year):
     """Prepare the DataFrame for map function:
@@ -22,6 +26,11 @@ def get_region_crash_counts_for_join(df, year):
     filtered_df = df.loc[df['crashYear'] == year]  
     #for later use as filter in streamlit? Choice: == one year or isin year list?
     grouped = filtered_df.groupby('region', observed= False).size().reset_index(name = 'CrashCount') 
+    #grouped.loc[grouped['region'] == 'Auckland Region', 'region'] = 'Auckland' #Edward reminded me the Auckland name is different in cas and shp file
+    #error occured, since the column was category while replace is based on str!
+    #use dict!
+    #grouped['region'] = grouped['region'].replace(Auckland_name_mapping) #python future feature warning? 
+    grouped['region'] = grouped['region'].astype(str).replace(Auckland_name_mapping)
     #use group to accumulate by region name using size() and set column name as 'CrashCount'
     return grouped 
 
@@ -40,6 +49,7 @@ def merge_shp_with_map_data (region_crash_counts, shp_path=MAP_FILE, region_key_
     gpd dataframe merged with crash count, need to filled 0 if no data for the region record.
     """
     gpd_df = gpd.read_file(shp_path)
+    gpd_df = gpd_df[gpd_df['REGC2025_1'] != 'Area Outside Region'] #remind from Edward, this region can be excluded
     merged = gpd_df.merge(region_crash_counts, left_on=region_key_shp, right_on=region_key_data, how="left")
     #why left: maintain integrity of shp data, if data for certain region of a year is 0, nan will be given for the region
     #right join: if one region is 0, shp will not be introduced and cause error
@@ -47,6 +57,9 @@ def merge_shp_with_map_data (region_crash_counts, shp_path=MAP_FILE, region_key_
     merged[count_col] = merged[count_col].fillna(0).astype(int) 
     #fill nan with 0, transfer to int as nan is float
     return merged
+
+gpd_df = gpd.read_file(MAP_FILE)
+print(gpd_df)
 
 def draw_nz_map(shapefile_path=MAP_FILE):
     """
@@ -62,7 +75,7 @@ def draw_nz_map(shapefile_path=MAP_FILE):
     plt.tight_layout()
     plt.show()
 
-draw_nz_map(shapefile_path=MAP_FILE)
+#draw_nz_map(shapefile_path=MAP_FILE)
 
 def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
     """
@@ -94,6 +107,8 @@ def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
 
 cleaned_df = load_and_clean()
 
+"""
 test_year = 2023
 fig = generate_region_crash_map_by_year(cleaned_df, test_year, cmap="OrRd")
 plt.show()
+"""
