@@ -66,21 +66,25 @@ def run_dashboard():
         selected_severities = get_dashboard_filter(df, 'crashSeverity', "Select Crash Severity Types")
         df = df[df['crashSeverity'].isin(selected_severities)]
 
+        if df.empty: #use boolean
+            #for plotting, error appears if no data selected
+            #add warning to remind user, aviod error output
+            st.warning("No data available for the selected filters. Please select at least one criteria.")
+        else:
+            crash_count_table = calculate_count_table(df, SEVERITY_ORDER)
 
-        crash_count_table = calculate_count_table(df, SEVERITY_ORDER)
+            st.title("Crash Count Visual Report")
+            st.subheader("Crash Count Table")
+            st.dataframe(crash_count_table) #print the crash count table
 
-        st.title("Crash Count Visual Report")
-        st.subheader("Crash Count Table")
-        st.dataframe(crash_count_table) #print the crash count table
-
-        st.subheader("Stacked Bar Chart")
-        fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under crash count table
-        crash_count_table.plot (kind = 'bar', stacked = True, ax = axes)
-        axes.set_xlabel("Speed Limit")
-        axes.set_ylabel("Crash Counts")
-        axes.set_title('Crash Count Table')
-        axes.legend(title = 'Crash Severity')
-        st.pyplot(fig)
+            st.subheader("Stacked Bar Chart")
+            fig, axes = plt.subplots(figsize = (10,6)) #plot a sub graph under crash count table
+            crash_count_table.plot (kind = 'bar', stacked = True, ax = axes)
+            axes.set_xlabel("Speed Limit")
+            axes.set_ylabel("Crash Counts")
+            axes.set_title('Crash Count Table')
+            axes.legend(title = 'Crash Severity')
+            st.pyplot(fig)
 
     with tab2:
         st.title("Annual Crash Amounts by Region")
