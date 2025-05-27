@@ -162,7 +162,7 @@ def prepare_lists_from_df(df, selected_types, start_year, end_year):
     for severity in selected_types:
         counts = df_range[severity].tolist()
         counts_lists.append(counts)
-    return years, counts_lists
+    return years, counts_lists #review: ready for x and y axis in plotting
 
 
 def menu_select(options: list[str]) -> int:
@@ -210,8 +210,8 @@ def generate_crash_table_by_year(df):
     crash_summary = df.groupby(['crashYear', 'crashSeverity'],observed=False).size().unstack(fill_value=0) 
     #group by two categories, count each category with size(), unstack to two dimension use severity as column.
     #fill 0 for a cell which has no accident record, add speed limit as another filter in displaying?
-    crash_summary = crash_summary.reindex(columns = SEVERITY_ORDER, fill_value = 0)
-    crash_summary['Total'] = crash_summary.sum(axis = 1)
+    crash_summary = crash_summary.reindex(columns = SEVERITY_ORDER, fill_value = 0) #reindex by pre-set order, fill missing value with 0
+    crash_summary['Total'] = crash_summary.sum(axis = 1) # add total by row
     return crash_summary
 
 def plot_trends_over_time (years, selected_types, counts_lists):
