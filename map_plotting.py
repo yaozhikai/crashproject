@@ -58,8 +58,9 @@ def merge_shp_with_map_data (region_crash_counts, shp_path=MAP_FILE, region_key_
     #fill nan with 0, transfer to int as nan is float
     return merged
 
-gpd_df = gpd.read_file(MAP_FILE)
-print(gpd_df)
+# used to review shp file content
+#gpd_df = gpd.read_file(MAP_FILE)
+#print(gpd_df)
 
 def draw_nz_map(shapefile_path=MAP_FILE):
     """
