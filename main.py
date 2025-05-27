@@ -188,7 +188,7 @@ def print_crash_severity_report(year_of_interest: int, speed_of_interest: int, d
     Prints a table outlining the number of crashes in a given year for a given speed limit
     based on DataFrame
     """    
-    filtered = df[(df['crashYear'] == year_of_interest) & (df['effectiveSpeed'] == speed_of_interest)]
+    filtered = df.loc[(df['crashYear'] == year_of_interest) & (df['effectiveSpeed'] == speed_of_interest)]
     if filtered.empty:
         print(f"Warning: No records found for year {year_of_interest} and speed {speed_of_interest}.")
         return
@@ -208,6 +208,7 @@ def generate_crash_table_by_year(df):
     Return: DataFrame contains Year and Severity
     """
     crash_summary = df.groupby(['crashYear', 'crashSeverity'],observed=False).size().unstack(fill_value=0) 
+    #group by two categories, count each category with size(), unstack to two dimension use severity as column.
     #fill 0 for a cell which has no accident record, add speed limit as another filter in displaying?
     crash_summary = crash_summary.reindex(columns = SEVERITY_ORDER, fill_value = 0)
     crash_summary['Total'] = crash_summary.sum(axis = 1)
