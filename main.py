@@ -68,9 +68,13 @@ def extract_valid_values(cleaned_df, column_name):
     Review Note: used this to extract years and speedlimit containted in df
     Refactored as previous coding based on unique value was redundant
 
+    Review note 2: the previous premitive method solved the np.int output problem,
+    need to refactor to generate int output year and speed.
     """
-    return sorted(cleaned_df[column_name].dropna().unique())
-
+    result = []
+    for x in cleaned_df[column_name].dropna().unique():
+        result.append(int(x)) #append int to the list
+    return sorted(result)
 
 def read_valid_int (prompt, valid_data, value='value'):
     """This is a combined function to read user input of integer value for year and speed
