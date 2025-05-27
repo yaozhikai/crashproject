@@ -1,3 +1,25 @@
+""" 
+For A3:
+
+Purpose:
+Uses Streamlit to create an interactive web dashboard, 
+allowing users to apply filters (speed, severity, weather) 
+to visualize crash data as stacked bar charts and geographic maps.
+
+Key Functions:
+
+calculate_count_table: Generates a crash count table by speed and severity.
+
+get_weather_filter, get_dashboard_filter: Provides filter options for weather, speed, and severity categories.
+
+run_dashboard: Combines the dashboard logic into two tabs:
+
+Tab 1: Displays the crash count table and stacked bar chart.
+
+Tab 2: Displays crash map for selected years and a summary crash count table by region.
+"""
+
+
 import streamlit as st
 import matplotlib.pyplot as plt
 from map_plotting import generate_region_crash_map_by_year

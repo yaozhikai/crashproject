@@ -1,3 +1,27 @@
+"""
+For A3:
+
+Purpose:
+Generates map showing crash data distributions across 
+New Zealand regions (based on shp) for specific year.
+
+Key Functions:
+
+get_region_crash_counts_for_join: Counts crashes by region for a specific year.
+* corrected Auckland name
+
+merge_shp_with_map_data: Merges shapefile geographic data with crash data, 
+ensuring all regions are represented. Exclude outside region.
+
+generate_region_crash_map_by_year: Plots the crash count map with matplotlib.
+
+draw_nz_map: testing function to check map layout (shp geo data).
+
+Input & Output:
+Input: Cleaned crash data and shp path.
+Output: Figure object of the map, ready for display or saving.
+"""
+
 import geopandas as gpd
 import pandas as pd
 import matplotlib.pyplot as plt
