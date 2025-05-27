@@ -31,20 +31,22 @@ Option 2: User input 0 to exit the program and print a message "bye".
 ## Dependencies
 Fill in this section, list any libraries that this program requires to run.
 - Data (Waka Kotahi) CC BY 4.0
+- regional-council-2025.shp (Stat NZ)
 - [Pandas](https://pandas.pydata.org/)
 - [Matplotlib](https://matplotlib.org/)
 - [Streamlit](https://docs.streamlit.io/)
 - [GeoPandas](https://geopandas.org/)
+- [adjustText](https://pypi.org/project/adjustText/)
 
 ## How to Run
 To execute this program run following command from a terminal:
 
 `python3 main.py`
 
-For the Streamlit dashboard, it can also be executed through the following command:
-
-`streamlit run dashboard_app.py`
-
+For Part A3 (Streamlit dashboard), alternative execution methods are:
+1. Directly launch it by running the following command in the terminal:
+ `streamlit run dashboard_app.py`
+2. Or, after executing `python3 main.py`, select Option 3 from the menu. 
 
 ## Future Development
 In addition to the required features, I plan to add extra data (e.g., weatherA) from the given dataset and include visualizations to improve the project.
@@ -65,5 +67,7 @@ The graph can help users review and compare if there are any patterns in an intu
 ## Citations
 
 - Waka Kotahi. _Crash Analysis System (CAS) data_ [Review of  Crash Analysis System (CAS) data]. Retrieved January 13, 2025, from https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc_0/explore
-Streamlit https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/
-https://geopandas.org/en/stable/getting_started/introduction.html
+- Stats NZ. (2025). Regional council 2025 [Data set]. https://datafinder.stats.govt.nz/layer/120946-regional-council-2025/
+- GeeksforGeeks. (n.d.). A beginner’s guide to Streamlit. https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/
+- GeoPandas developers. (n.d.). Introduction to GeoPandas. https://geopandas.org/en/stable/getting_started/introduction.html
+- adjustText contributors. (n.d.). adjustText documentation. https://adjusttext.readthedocs.io/en/latest/
