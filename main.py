@@ -52,7 +52,6 @@ from clean_data import load_and_clean
 
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
-CONDITION = "fine"
 # Define fixed severity order for consistent report form
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
