@@ -62,7 +62,14 @@ Matplotlib can be used to create a line graph to show trends in different accide
 The graph can help users review and compare if there are any patterns in an intuitive approach.
 
 ### Student Lead Features
+#### Interactive Dashboard with Visual Reports and Regional Crash Mapping
+This feature introduces a Streamlit-powered dashboard that enhances data exploration and visualization:
 
+##### Tab 1: Interactive Filtering and Visual Reports
+Users can interactively select crash severity categories and speed limits through filters. The dashboard then dynamically updates and displays visual reports, such as bar charts or tables—allowing users to observe crash data trends under selected conditions.
+
+##### Tab 2: Annual Crash Accident Mapping by Region
+This tab provides a geographic visualization of crash incidents across different regions for a chosen year. A scroll bar enables users to easily select the desired year, and the dashboard dynamically outputs a corresponding map showing regional crash counts. This approach offers an intuitive and spatial perspective on annual crash accident patterns.
 
 ## Citations
 
