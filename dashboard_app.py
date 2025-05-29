@@ -29,16 +29,17 @@ SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Cra
 
 def calculate_count_table(df, SEVERITY_ORDER):
     """
-    refacor from proportion calculate function. now similar to main calculation function.
+    refactor from proportion calculate function. now similar to main calculation function.
     retain for better adjustment and documentation.
-    original design was    
+    
+    Note: original design was    
     Group by weather and severity, then calculate and generate percentage table with 'div' method.
     """
     grouped = df.groupby(['effectiveSpeed','crashSeverity'], observed=False).size().unstack(fill_value=0)
-    #grouped = df.groupby(['urban', 'crashSeverity'], observed=False).size().unstack(fill_value=0)
+    #size for count every sev category by each speed
+    #unstack to transfer sev to columns
     grouped = grouped.reindex(columns=SEVERITY_ORDER, fill_value=0)
-    #proportion_df = grouped.div(grouped.sum(axis=1), axis=0)
-    return grouped #proportion_df
+    return grouped
 
 def get_weather_filter(df):
     """a subfunction for select 'weatherA' for another dimension to study weather impact"""
@@ -58,21 +59,6 @@ def get_dashboard_filter(df, column_name, label):
     selected = st.sidebar.multiselect(label, unique_values, default=unique_values)
     return selected
 
-
-def get_speed_for_speed(df): #legacy, combined to one filter
-    """a subfunction for select speed limit, didn't reuse weather filter as for weather orther filter logic is needed and tested"""
-    speeds = sorted(df['effectiveSpeed'].unique())
-    selected = st.sidebar.multiselect("Select speed limit", speeds, default=speeds)
-    return selected
-pass
-                    
-def get_severity_filter(df): #legacy, combined to one filter
-    """Filter for selecting crash severity types"""
-    severity_types = sorted(df['crashSeverity'].unique())
-    selected = st.sidebar.multiselect("Select Crash Severity Types", severity_types, default=severity_types)
-    return selected
-pass
-
 def run_dashboard():
     """a function to generate dashboard for users.
     The dashboard shows the proportion of severity types under different weatherA conditons
@@ -83,10 +69,6 @@ def run_dashboard():
     with tab1:
         weather_types = get_weather_filter(df) #use sub-function for filter application
         df = df[df["weatherA"].isin(weather_types)] #slice
-        #speed_types = get_speed_for_speed(df)
-        #df = df[df["effectiveSpeed"].isin(speed_types)]
-        #selected_severities = get_severity_filter(df)
-        #df = df[df['crashSeverity'].isin(selected_severities)] 
         speed_types = get_dashboard_filter(df, 'effectiveSpeed', "Select speed limit")
         df = df[df["effectiveSpeed"].isin(speed_types)]
         selected_severities = get_dashboard_filter(df, 'crashSeverity', "Select Crash Severity Types")
