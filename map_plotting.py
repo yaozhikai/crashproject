@@ -112,10 +112,8 @@ def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
         #parameter: row name for region, horizontally align in center, font size and color
         texts.append(text)
 
-    adjust_text(texts, ax=axes, expand_text=(1.5, 1.5), expand_objects=(6, 6), 
-                arrowprops=dict(arrowstyle="-", color='grey', lw=0.5))
+    adjust_text(texts, ax=axes, expand_text=(1.5, 1.5), expand_objects=(6, 6))
     #parameters: object: texts list, axes, max distance to center, space between
-    #dict for linestype, color and line width
 
     return fig
 

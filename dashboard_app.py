@@ -25,8 +25,6 @@ import matplotlib.pyplot as plt
 from map_plotting import generate_region_crash_map_by_year
 from map_plotting import get_region_crash_counts_for_join #generic function, use to slice df by region and year
 from clean_data import load_and_clean
-import warnings
-warnings.filterwarnings("ignore", message="Looks like you are using a tranform that doesn't support FancyArrowPatch*")
 
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 

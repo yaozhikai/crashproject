@@ -50,10 +50,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 from clean_data import load_and_clean
-import warnings
-warnings.filterwarnings("ignore", message="Looks like you are using a tranform that doesn't support FancyArrowPatch*")
-
-
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 # Define fixed severity order for consistent report form
