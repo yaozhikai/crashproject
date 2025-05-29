@@ -48,7 +48,11 @@ on new lib (folium? plotly?) study still pending
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 from clean_data import load_and_clean
+import warnings
+warnings.filterwarnings("ignore", message="Looks like you are using a tranform that doesn't support FancyArrowPatch*")
+
 
 
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
@@ -286,6 +290,7 @@ def main():
             subprocess.Popen(["streamlit", "run", "dashboard_app.py"]) 
             #arguments note: streamlit- call this app, run- start python script, python script name to be called
             print("\n")
+            time.sleep(3)
             print("Streamlit dashboard has been launched in the browser.")
 
         elif option == 4:
