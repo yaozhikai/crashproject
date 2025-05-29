@@ -29,7 +29,6 @@ from adjustText import adjust_text
 from clean_data import load_and_clean
 
 MAP_FILE = "data/regional-council-2025.shp"
-#MAP_FILE = "data/regional-council-2025-clipped.shp"
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
 
 Auckland_name_mapping = {'Auckland Region': 'Auckland'} #solve the Auckland name anomaly
@@ -48,12 +47,7 @@ def get_region_crash_counts_for_join(df, year):
     DataFrame of crash count by region    
     """
     filtered_df = df.loc[df['crashYear'] == year]  
-    #for later use as filter in streamlit? Choice: == one year or isin year list?
     grouped = filtered_df.groupby('region', observed= False).size().reset_index(name = 'CrashCount') 
-    #grouped.loc[grouped['region'] == 'Auckland Region', 'region'] = 'Auckland' #Edward reminded me the Auckland name is different in cas and shp file
-    #error occured, since the column was category while replace is based on str!
-    #use dict!
-    #grouped['region'] = grouped['region'].replace(Auckland_name_mapping) #python future feature warning? 
     grouped['region'] = grouped['region'].astype(str).replace(Auckland_name_mapping)
     #use group to accumulate by region name using size() and set column name as 'CrashCount'
     return grouped 
@@ -81,26 +75,6 @@ def merge_shp_with_map_data (region_crash_counts, shp_path=MAP_FILE, region_key_
     merged[count_col] = merged[count_col].fillna(0).astype(int) 
     #fill nan with 0, transfer to int as nan is float
     return merged
-
-# used to review shp file content
-#gpd_df = gpd.read_file(MAP_FILE)
-#print(gpd_df)
-
-def draw_nz_map(shapefile_path=MAP_FILE):
-    """
-    Draw a clean static outline map of New Zealand regions using shapefile.
-    No labels or index are shown—just geometry for visual inspection or base map use.
-
-    Parameters:
-        shapefile_path (str): Path to the shapefile (.shp)
-    """
-    gdf = gpd.read_file(shapefile_path)
-    gdf.plot(color='white', edgecolor='black')
-    plt.axis("off")
-    plt.tight_layout()
-    plt.show()
-
-#draw_nz_map(shapefile_path=MAP_FILE)
 
 def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
     """
@@ -146,9 +120,3 @@ def generate_region_crash_map_by_year(cleaned_df, year, cmap="OrRd"):
     return fig
 
 cleaned_df = load_and_clean()
-
-"""
-test_year = 2023
-fig = generate_region_crash_map_by_year(cleaned_df, test_year, cmap="OrRd")
-plt.show()
-"""
