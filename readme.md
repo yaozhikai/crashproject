@@ -69,14 +69,47 @@ Matplotlib can be used to create a line graph to show trends in different accide
 The graph can help users review and compare if there are any patterns in an intuitive approach.
 
 ### Student Lead Features
-#### Interactive Dashboard with Visual Reports and Regional Crash Mapping
-This feature introduces a Streamlit-powered dashboard that enhances data exploration and visualization:
+The A3 project introduces an interactive dashboard based on streamlit, which is designed to enhance the exploration and visualization of crash data. The dashboard is user-friendly, providing clear insights into crash trends and regional distributions.
+
+#### Feature Overview
+The dashboard is implemented in dashboard_app.py, leveraging the Streamlit framework for web-based interactivity. It is structured into two key tabs.
+Before rendering, the dashboard relies on a clean and preprocessed dataset prepared in clean_data.py via the load_and_clean() function. This ensures that all data used in the dashboard (including crash counts, weather conditions, and severity categories) is valid, consistently formatted, and free from errors. The cleaned dataset serves as the foundation for generating accurate crash reports and visualizations across both tabs.
 
 ##### Tab 1: Interactive Filtering and Visual Reports
-Users can interactively select crash severity categories and speed limits through filters. The dashboard then dynamically updates and displays visual reports, such as bar charts or tables—allowing users to observe crash data trends under selected conditions.
+Purpose: 
+Enables users to dynamically filter crash data by selecting crash severity categories (e.g., Fatal, Serious, Minor, Non-injury), applicable speed limits (multiples of 10 km/h), and weather conditions.
+
+Functionality:
+- Sidebar filter controls allow multiple selections for severity, speed limit and weather.
+- Real-time generation of visual reports (bar charts) and Crash count table summaries based on selected filters.
+- Designed to reveal crash patterns under specific conditions and facilitate comparative analysis.
+
+Code Reference:
+Core logic is handled in dashboard_app.py, where:
+  - get_weather_filter() and get_dashboard_filter() handle filter inputs.
+  - calculate_count_table() generates the count table by speed and severity.
+  - run_dashboard() combines filters, plots a stacked bar chart, and renders the report in Tab 1.
+
+##### Tab 1 Example:
+- Remove 'Non-injury Crash' from the Crash Severity Types filter in side bar
+- View the generated bar chart and summary table reflecting the selected data filters.
+- If no data matches the selected filters, a warning will notify the user.
 
 ##### Tab 2: Annual Crash Accident Mapping by Region
-This tab provides a geographic visualization of crash incidents across different regions for a chosen year. A scroll bar enables users to easily select the desired year, and the dashboard dynamically outputs a corresponding map showing regional crash counts. This approach offers an intuitive and spatial perspective on annual crash accident patterns.
+Purpose: 
+Provides an intuitive, spatial visualization of crash incidents across regions for a selected year.
+
+Functionality:
+- Single year selection via a sidebar scroll bar (covers 2000–2024).
+- Dynamic map showing crash counts for the selected year, and a crash count table summarising crash counts by region.
+- Interactive maps aid in identifying regional accident patterns.
+
+Code Reference:
+- Map generation utilizes geopandas and matplotlib in map_plotting.py, implemented in dashboard through dashboard_app.py.
+
+##### Tab 2 Example:
+- Set year selection to 2023 through scroll bar above the map
+- Observe the crash distribution map highlighting crash counts by region for that year.
 
 ## Citations
 
