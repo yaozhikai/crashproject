@@ -43,10 +43,17 @@ To execute this program run following command from a terminal:
 
 `python3 main.py`
 
+### Part A3
 For Part A3 (Streamlit dashboard), alternative execution methods are:
 1. Directly launch it by running the following command in the terminal:
  `streamlit run dashboard_app.py`
 2. Or, after executing `python3 main.py`, select Option 3 from the menu. 
+
+### Python scripts related to part A3 are:
+main.py (to run the main program)
+clean_data.py
+dashboard_app.py
+map_plotting.py
 
 ## Future Development
 In addition to the required features, I plan to add extra data (e.g., weatherA) from the given dataset and include visualizations to improve the project.
