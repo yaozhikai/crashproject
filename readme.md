@@ -1,111 +1,139 @@
+Perfect — thanks for pasting the full README draft.
+Here’s a **revised English version** of your README, keeping all the structure you already wrote but improving clarity, formatting, and adding a **Data section** explaining how to manually download and place the CSV file.
+
+---
+
 # Crash Data Analysis
 
+## Overview
+
+This project analyzes road crash data in New Zealand and provides both a command-line interface and a Streamlit dashboard for data exploration.
+The dataset includes numeric variables (e.g., victim headcount, geographic coordinates) and categorical variables (e.g., location, road conditions, weather, severity).
+Some attributes such as speed limit can be treated as either numeric or categorical, depending on the analysis.
+
+---
+
+## Data
+
+The crash dataset is published by **Waka Kotahi NZ Transport Agency (NZTA)**:
+[Crash Analysis System (CAS) – Open Data Portal](https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc_0/explore)
+
+**Important:**
+The dataset is large (>200 MB) and is **not included in this repository**.
+To run the program, you must manually download the CSV file and place it inside a `data/` folder in the project directory.
+
+Example structure:
+
+```
+crashproject/
+│
+├─ data/
+│   └─ CAS.csv
+│
+├─ main.py
+├─ clean_data.py
+├─ dashboard_app.py
+├─ map_plotting.py
+...
+```
+
+If the data file is missing, the program will raise an error and instruct you to download it.
+
+---
+
 ## Initial Program Behavior
-The CSV file contains records of car crash accidents. The data consists of numerical data, 
-such as victim headcount and geographic coordinates, and categorical data, including location, 
-road conditions, weather, severity, and other details of accidents. 
-Some data like speed limit can be treated as either numerical or categorical, depending on the purpose of the data analysis.
 
-By running the program, the user can select a function by entering the number 0,1 or 2 shown in the menu.
-After the user inputs the option number, the program will validate the input. 
-If the input is out of the pre-set range, the program will remind the user that it is an invalid input and prompt them to try again.The program can generating reports, creating graphical reports (not implemented yet), and exiting.
+Running the program presents a menu where the user can select a function by entering option numbers (`0`, `1`, or `2`).
+The program validates input, and out-of-range entries will be rejected with a reminder message.
 
-The functions are:
-Option 0: If the user input 0, they need to follow the menu prompts to enter year and speed limit. 
-The program will then display a crash severity report, showing the number of crashes categorized by severity that match the conditions.
-If the input is outside the range of the data, the report will show zero for all crash severity categories.
+Available options:
 
-Option 1: Name of the function suggests when user input 1, it will generate a graph report.
-However, this function is not implemented yet and will return a message to notify the user.
+* **Option 0** – Prompts the user to enter a year and a speed limit, then displays a crash severity report. If the chosen values are not in the dataset, the report shows zero counts.
+* **Option 1** – Intended to generate a graph report (currently not implemented). It simply notifies the user that the function is unavailable.
+* **Option 2** – Exits the program with a farewell message.
 
-Option 2: User input 0 to exit the program and print a message "bye".
+---
 
 ## Dependencies
-- Data (Waka Kotahi) CC BY 4.0
-- regional-council-2025.shp (Stat NZ)
-- [Pandas](https://pandas.pydata.org/)
-- [Matplotlib](https://matplotlib.org/)
-- [Streamlit](https://docs.streamlit.io/)
-- [GeoPandas](https://geopandas.org/)
-- [adjustText](https://pypi.org/project/adjustText/)
+
+* **Data**: Waka Kotahi NZTA CAS dataset (CC BY 4.0)
+* **Shapefile**: `regional-council-2025.shp` (Stats NZ)
+* [Pandas](https://pandas.pydata.org/)
+* [Matplotlib](https://matplotlib.org/)
+* [Streamlit](https://docs.streamlit.io/)
+* [GeoPandas](https://geopandas.org/)
+* [adjustText](https://pypi.org/project/adjustText/)
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
 
 ## How to Run
-To execute this program run following command from a terminal:
 
-`python3 main.py`
+To execute the CLI program:
 
-### Part A3
-For Part A3 (Streamlit dashboard), alternative execution methods are:
-1. Directly launch it by running the following command in the terminal:
- `streamlit run dashboard_app.py`
-2. Or, after executing `python3 main.py`, select Option 3 from the menu. 
+```bash
+python3 main.py
+```
 
-### Python scripts related to part A3 are:
-main.py (to run the main program)
-clean_data.py
-dashboard_app.py
-map_plotting.py
+### Streamlit Dashboard (Part A3)
+
+You can launch the dashboard in two ways:
+
+1. Run directly:
+
+   ```bash
+   streamlit run dashboard_app.py
+   ```
+2. Run the main program (`python3 main.py`) and choose **Option 3** from the menu.
+
+**Scripts related to Part A3:**
+
+* `main.py` (entry point)
+* `clean_data.py` (data preprocessing)
+* `dashboard_app.py` (dashboard implementation)
+* `map_plotting.py` (map rendering)
+
+---
 
 ## Future Development
-In addition to the required features, I plan to add extra data (e.g., weatherA) from the given dataset and include visualizations to improve the project.
-These developments will help users better understand accident trends and possible factors affecting accident severity.
 
-### Basic Analysis Feature
-#### Relationship Between Weather Conditions and Accident Severity
-This analysis will check how different weather conditions affect the severity of car crashes.
-The hypothesis is bad weather may cause more serious accidents due to reduced visibility and poor road conditions.
-The method is to group accident records by weather condition and severity level and use Matplotlib to generate a bar chart to show how accident severity changes in different weather conditions.
-#### Accident Trends Over Time
-Matplotlib can be used to create a line graph to show trends in different accident severity over the years.
-The graph can help users review and compare if there are any patterns in an intuitive approach.
+Planned improvements:
 
-### Student Lead Features
-The A3 project introduces an interactive dashboard based on streamlit, which is designed to enhance the exploration and visualization of crash data. The dashboard is user-friendly, providing clear insights into crash trends and regional distributions.
+* Incorporating additional data (e.g., weather)
+* Implementing visualizations to better illustrate accident trends and influencing factors
 
-#### Feature Overview
-The dashboard is implemented in dashboard_app.py, leveraging the Streamlit framework for web-based interactivity. It is structured into two key tabs.
-Before rendering, the dashboard relies on a clean and preprocessed dataset prepared in clean_data.py via the load_and_clean() function. This ensures that all data used in the dashboard (including crash counts, weather conditions, and severity categories) is valid, consistently formatted, and free from errors. The cleaned dataset serves as the foundation for generating accurate crash reports and visualizations across both tabs.
+### Example Features
 
-##### Tab 1: Interactive Filtering and Visual Reports
-Purpose: 
-Enables users to dynamically filter crash data by selecting crash severity categories (e.g., Fatal, Serious, Minor, Non-injury), applicable speed limits (multiples of 10 km/h), and weather conditions.
+* **Weather vs. Crash Severity**: Analyze how different weather conditions affect crash severity by grouping records and generating comparative bar charts.
+* **Accident Trends Over Time**: Plot time series of crash severity categories to detect long-term patterns.
 
-Functionality:
-- Sidebar filter controls allow multiple selections for severity, speed limit and weather.
-- Real-time generation of visual reports (bar charts) and Crash count table summaries based on selected filters.
-- Designed to reveal crash patterns under specific conditions and facilitate comparative analysis.
+### Student-Led Features (Part A3)
 
-Code Reference:
-Core logic is handled in dashboard_app.py, where:
-  - get_weather_filter() and get_dashboard_filter() handle filter inputs.
-  - calculate_count_table() generates the count table by speed and severity.
-  - run_dashboard() combines filters, plots a stacked bar chart, and renders the report in Tab 1.
+The Streamlit dashboard introduces a user-friendly web interface with two main tabs:
 
-##### Tab 1 Example:
-- Remove 'Non-injury Crash' from the Crash Severity Types filter in side bar
-- View the generated bar chart and summary table reflecting the selected data filters.
-- If no data matches the selected filters, a warning will notify the user.
+#### Tab 1 – Interactive Filtering and Visual Reports
 
-##### Tab 2: Annual Crash Accident Mapping by Region
-Purpose: 
-Provides an intuitive, spatial visualization of crash incidents across regions for a selected year.
+* Filters: crash severity, speed limits, weather conditions
+* Outputs: bar charts and summary tables that update in real time
+* Warnings if no data matches the filters
 
-Functionality:
-- Single year selection via a sidebar scroll bar (covers 2000–2024).
-- Dynamic map showing crash counts for the selected year, and a crash count table summarising crash counts by region.
-- Interactive maps aid in identifying regional accident patterns.
+#### Tab 2 – Annual Crash Mapping by Region
 
-Code Reference:
-- Map generation utilizes geopandas and matplotlib in map_plotting.py, implemented in dashboard through dashboard_app.py.
+* Sidebar control for year selection (2000–2024)
+* Displays a map of crash counts by region plus a summary table
+* Helps identify regional crash patterns
 
-##### Tab 2 Example:
-- Set year selection to 2023 through scroll bar above the map
-- Observe the crash distribution map highlighting crash counts by region for that year.
+---
 
 ## Citations
 
-- Waka Kotahi. _Crash Analysis System (CAS) data_ [Review of  Crash Analysis System (CAS) data]. Retrieved January 13, 2025, from https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc_0/explore
-- Stats NZ. (2025). Regional council 2025 [Data set]. https://datafinder.stats.govt.nz/layer/120946-regional-council-2025/
-- GeeksforGeeks. (n.d.). A beginner’s guide to Streamlit. https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/
-- GeoPandas developers. (n.d.). Introduction to GeoPandas. https://geopandas.org/en/stable/getting_started/introduction.html
-- adjustText contributors. (n.d.). adjustText documentation. https://adjusttext.readthedocs.io/en/latest/
+* Waka Kotahi. *Crash Analysis System (CAS) data*. Retrieved Jan 13, 2025, from [https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc\_0/explore](https://opendata-nzta.opendata.arcgis.com/datasets/8d684f1841fa4dbea6afaefc8a1ba0fc_0/explore)
+* Stats NZ. (2025). *Regional council 2025* \[Data set]. [https://datafinder.stats.govt.nz/layer/120946-regional-council-2025/](https://datafinder.stats.govt.nz/layer/120946-regional-council-2025/)
+* GeeksforGeeks. *A beginner’s guide to Streamlit*. [https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/](https://www.geeksforgeeks.org/a-beginners-guide-to-streamlit/)
+* GeoPandas developers. *Introduction to GeoPandas*. [https://geopandas.org/en/stable/getting\_started/introduction.html](https://geopandas.org/en/stable/getting_started/introduction.html)
+* adjustText contributors. *adjustText documentation*. [https://adjusttext.readthedocs.io/en/latest/](https://adjusttext.readthedocs.io/en/latest/)
