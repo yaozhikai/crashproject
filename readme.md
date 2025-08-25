@@ -1,12 +1,4 @@
 # Crash Data Analysis
-## Tasks
-- [ ] Download the initial project files from the LMS
-- [ ] Write your first commit adding these files in your repository
-- [ ] Inspect the code in `main.py`
-- Fill in missing sections of `readme.md`
-  - [ ] Fill in *Initial Program Behaviour* section
-  - [ ] Fill in the *Future Development* sections
-- [ ] Commit the changes to `readme.md` and push the changes to your eng-git repository
 
 ## Initial Program Behavior
 The CSV file contains records of car crash accidents. The data consists of numerical data, 
@@ -29,7 +21,6 @@ However, this function is not implemented yet and will return a message to notif
 Option 2: User input 0 to exit the program and print a message "bye".
 
 ## Dependencies
-Fill in this section, list any libraries that this program requires to run.
 - Data (Waka Kotahi) CC BY 4.0
 - regional-council-2025.shp (Stat NZ)
 - [Pandas](https://pandas.pydata.org/)
