@@ -46,6 +46,7 @@ on new lib (folium? plotly?) study still pending
 - Add new options? for weather and region? add these filters on map/dashboard?
 """
 
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
@@ -54,6 +55,13 @@ from clean_data import load_and_clean
 DATA_FILE = "data/Crash_Analysis_System_(CAS)_data.csv"
 # Define fixed severity order for consistent report form
 SEVERITY_ORDER = ["Fatal Crash", "Serious Crash", "Minor Crash", "Non-Injury Crash"]
+
+if not os.path.exists(DATA_FILE):
+    raise FileNotFoundError(
+        f"Data file not found: {DATA_FILE}\n"
+        "Please download the CAS dataset (CSV) from NZTA Open Data Portal "
+        "and place it inside the /data folder."
+    )
 
 def extract_valid_values(cleaned_df, column_name):
     """
